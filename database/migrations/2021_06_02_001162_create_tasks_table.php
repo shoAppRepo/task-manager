@@ -18,7 +18,9 @@ class CreateTasksTable extends Migration
             $table->string('name');
             $table->integer('category_id');
             $table->timestamps();
+            $table->integer('period_id');
 
+            $table->foreign('period_id')->references('period_id')->on('periods')->onDelete('cascade');
             $table->foreign('category_id')->references('category_id')->on('categories');
         });
     }
