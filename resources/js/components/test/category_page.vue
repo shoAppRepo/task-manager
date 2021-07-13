@@ -40,11 +40,10 @@
                   class="card-header d-flex justify-content-between"
                 >
                   <input type="text" style="width:60%" :value="task.task.name" @change="changeValue('name', itemIndex, taskIndex, $event.target.value)">
-                  <span class="total-task-hour" @click="openModalHour(itemIndex, taskIndex)">{{ totalTaskHours(task.task) }}
-                    <button class="btn block p-0">
-                      <span class="fas fa-trash-alt ml-2" @click="deleteTask(itemIndex, taskIndex)"/>
-                    </button>
-                  </span>
+                  <span class="total-task-hour" @click="openModalHour(itemIndex, taskIndex)">{{ totalTaskHours(task.task) }}</span>
+                  <button class="btn block p-0">
+                    <span class="fas fa-trash-alt ml-2" @click="deleteTask(itemIndex, taskIndex)"/>
+                  </button>
                 </div>
 
               </div>
