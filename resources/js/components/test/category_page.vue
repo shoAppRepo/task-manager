@@ -109,6 +109,9 @@ export default {
     ...mapState({
       selected_period: (state) => state.period.selected_period,
     }),
+    selected(){
+      return (this.items.length > 0)? true: false;
+    },
     selectedPeriod: {
       get () { return this.$store.state.period.selected_period },
       set (val) { this.$store.commit('period/setSelectedPeriod', val) },

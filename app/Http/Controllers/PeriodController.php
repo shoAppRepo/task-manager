@@ -23,7 +23,8 @@ class PeriodController extends Controller
 
     $items = [];
     $selected_period = $params[0];
-    if($selected_period){
+
+    if(is_numeric($selected_period)){
       $CtgController = new CategoryController();
       list(
         'items' => $items,
