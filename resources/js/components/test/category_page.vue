@@ -11,7 +11,7 @@
         </div>
         <!-- 保存 -->
         <div class="text-center"> 
-          <button class="bottom-icon save-icon btn" @click="save">
+          <button class="bottom-icon btn" @click="save">
             保存
           </button>
         </div>
@@ -297,12 +297,6 @@ export default {
 </script>
 
 <style>
-.save-icon {
-  position: fixed;
-  bottom: 16px;
-  right: 16px;
-}
-
 .bottom-icon {
   display: inline-block;
   padding: 0.5em 1em;
