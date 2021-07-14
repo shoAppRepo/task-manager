@@ -1,95 +1,105 @@
 <template>
   <div>
-    <div class="container">
-      <div class="d-flex mb-3 justify-content-between">
-        <div class="d-flex">
-          <div class="d-flex align-items-center">期間選択：</div>
-          <select v-model="selectedPeriod" @change="getItems">
-            <option value="">---</option>
-            <option v-for="period in periods" :value="period.period_id" >{{ periodName(period) }}</option>
-          </select>
-        </div>
-        <!-- 保存 -->
-        <div class="text-center"> 
-          <button class="bottom-icon btn" @click="save">
+    <vue-loading v-if="is_loading" type="spin" color="#333" :size="{ width: '50px', height: '50px' }"></vue-loading>
+    <div v-else>
+      <div class="container">
+        <div class="row mb-4 justify-content-between">
+          <div class="col">
+            <select v-model="selectedPeriod" @change="getItems" class="col">
+              <option value="">---</option>
+              <option v-for="period in periods" :value="period.period_id" >{{ periodName(period) }}</option>
+            </select>
+          </div>
+          <!-- 保存 -->
+          <button class="bottom-icon btn col-2" @click="save">
             保存
           </button>
         </div>
-      </div>
-      <div
-        v-for="(item, itemIndex) in items"
-        class="mb-3"
-      >
-        <div class="card">
-          <div class="card-header d-flex justify-content-between">
-            <input style="width:60%" type="text" :value="item.name" @change="changeCategoryName(itemIndex, $event.target.value)"/>
-            <span>{{ countCategoryTasks(item) }}件：{{ totalCategoryHours(item)}}
-              <button class="btn block p-0">
-                <span class="fas fa-trash-alt ml-2" @click="deleteCategory(itemIndex)"/>
-              </button>
-            </span>
-          </div>
-          <div class="card-body">
-            <div class="tasks">
-              <div 
-                v-for="(task, taskIndex) in item.tasks"
-                class="card mb-2"
-              >
-                
-                <div 
-                  class="card-header d-flex justify-content-between"
-                >
-                  <input type="text" style="width:60%" :value="task.task.name" @change="changeValue('name', itemIndex, taskIndex, $event.target.value)">
-                  <span class="total-task-hour" @click="openModalHour(itemIndex, taskIndex)">{{ totalTaskHours(task.task) }}</span>
-                  <button class="btn block p-0">
-                    <span class="fas fa-trash-alt ml-2" @click="deleteTask(itemIndex, taskIndex)"/>
-                  </button>
+        <div
+          v-for="(item, itemIndex) in items"
+          class="col mb-4"
+        >
+          <div class="card mb-4">
+            <div class="card-header">
+              <div class="row">
+                <div class="col">
+                  <textarea style="width:100%" type="text" :value="item.name" @change="changeCategoryName(itemIndex, $event.target.value)"></textarea>
+                  <div>{{ countCategoryTasks(item) }}件：{{ totalCategoryHours(item)}}</div>
                 </div>
-
+                <button class="btn block p-0 col-1">
+                  <span class="fas fa-trash-alt ml-2" @click="deleteCategory(itemIndex)"/>
+                </button>
               </div>
             </div>
+            <div class="card-body">
+              <div class="tasks">
+                <div 
+                  v-for="(task, taskIndex) in item.tasks"
+                  class="card mb-3"
+                >
+                  
+                  <div 
+                    class="card-header"
+                  >
+                  <div class="row">
+                    <div class="col">
+                      <textarea type="text" style="width:100%" :value="task.task.name" @change="changeValue('name', itemIndex, taskIndex, $event.target.value)"></textarea>
+                      <div class="total-task-hour" @click="openModalHour(itemIndex, taskIndex)">{{ totalTaskHours(task.task) }}</div>
+                    </div>
+                    <button class="btn block p-0 col-1">
+                      <span class="fas fa-trash-alt ml-2" @click="deleteTask(itemIndex, taskIndex)"/>
+                    </button>
+                  </div>
+                  </div>
 
-            <!-- 追加ボタン -->
-            <button 
-              class="btn block"
-              @click="addTask(item, itemIndex)"
-            >
-              <span style="font-size:30px;" class="fas fa-plus-circle"/>
-            </button>
+                </div>
+              </div>
+
+              <!-- 追加ボタン -->
+              <button 
+                class="btn block"
+                @click="addTask(item, itemIndex)"
+              >
+                <span style="font-size:20px;" class="fas fa-plus-circle"/>
+              </button>
+            </div>
           </div>
         </div>
+
+        <!-- 追加ボタン -->
+        <button 
+          class="btn block"
+          @click="addCategory()"
+        >
+          <span style="font-size:20px;" class="fas fa-plus-circle"/>
+        </button>
+
       </div>
 
-      <!-- 追加ボタン -->
-      <button 
-        class="btn block"
-        @click="addCategory()"
-      >
-        <span style="font-size:30px;" class="fas fa-plus-circle"/>
-      </button>
-
+      <modal_hour 
+        v-if="is_modal_open"
+        :task="task"
+        :selected_task="selected_task"
+        @confirm="confirm($event)"
+        @close="closeModalHour()"
+      />
     </div>
-
-    <modal_hour 
-      v-if="is_modal_open"
-      :task="task"
-      :selected_task="selected_task"
-      @confirm="confirm($event)"
-      @close="closeModalHour()"
-    />
   </div>
 </template>
 
 <script>
 import modal_hour from '../parts/modal_hour';
 import { mapState } from 'vuex';
+import { VueLoading } from 'vue-loading-template'
 
 export default {
   components:{
     modal_hour,
+    VueLoading,
   },
   data(){
     return {
+      is_loading: false,
       is_modal_open: false,
       selected_task: {},
       selected_index: {},
@@ -132,9 +142,8 @@ export default {
 
         let h = Math.floor(hours / 3600000);//時間
         let m = Math.floor((hours - h * 3600000) / 60000);//分
-        let s = Math.round((hours - h * 3600000 - m * 60000) / 1000);//秒
 
-        return h + "時間" + m + "分" + s + "秒";//1時間0分60秒
+        return h + "時間" + m + "分";//1時間0分
       };
     },
     totalCategoryHours(){
@@ -143,9 +152,8 @@ export default {
 
         let h = Math.floor(hours / 3600000);//時間
         let m = Math.floor((hours - h * 3600000) / 60000);//分
-        let s = Math.round((hours - h * 3600000 - m * 60000) / 1000);//秒
 
-        return h + "時間" + m + "分" + s + "秒";//1時間0分60秒
+        return h + "時間" + m + "分";//1時間0分
       };
     },
     calcCategoryHours(){
@@ -167,11 +175,15 @@ export default {
           const manhour = task.manhours[key];
           const start = manhour.start;
           const end = manhour.end;
-          const start_date = new Date(String(start));
-          const end_date = new Date(String(end));
-          const diff_time =  (end_date - start_date);
-          
-          total_task_hours += diff_time;
+          if(start && end){
+            const start_date = new Date(String(start));
+            const end_date = new Date(String(end));
+            const diff_time =  (end_date - start_date);
+            
+            total_task_hours += diff_time;
+          }else {
+            total_task_hours += 0;
+          }
         });
 
         return total_task_hours;
@@ -180,6 +192,7 @@ export default {
   },
   methods:{
     init(){
+      this.is_loading = true;
       let period_id = null;
       if(this.$store.state.period.selected_period){
         period_id = this.$store.state.period.selected_period;
@@ -191,8 +204,11 @@ export default {
           this.periods = response.data.periods;
           this.items = response.data.items;
         });
+
+      this.is_loading = false;
     },
     save(){
+      this.is_loading = true;
       const items = this.items;
       const period_id = this.$store.state.period.selected_period;
       const delete_tasks = this.delete_tasks;
@@ -210,8 +226,11 @@ export default {
         }).catch((error) =>{
         this.$toasted.error('更新出来ませんでした');
       });
+
+      this.is_loading = false;
     },
     getItems(){
+      this.is_loading = true;
       const period_id = this.$store.state.period.selected_period;
 
       axios
@@ -219,6 +238,8 @@ export default {
         .then((response) => {
           this.items = response.data.items;
         });
+
+      this.is_loading = false;
     },
     countCategoryTasks(item){
       return item.tasks.length;
@@ -298,7 +319,7 @@ export default {
 <style>
 .bottom-icon {
   display: inline-block;
-  padding: 0.5em 1em;
+  padding: 0px;
   text-decoration: none;
   background: #668ad8;/*ボタン色*/
   color: #FFF;

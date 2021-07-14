@@ -39,7 +39,7 @@ class CategoryController extends Controller
 
         $manhours_of_this_task = $manhours->filter(function($manhour) use($task) {
           return $manhour->task_id === $task->task_id;
-        });
+        })->values();
 
         $task_with_manhours['task']['manhours'] = $manhours_of_this_task;
 

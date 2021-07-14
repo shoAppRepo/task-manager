@@ -40,6 +40,8 @@
 </template>
 
 <script>
+import moment from "moment";
+
 export default {
   data(){
     return {
@@ -49,19 +51,22 @@ export default {
   },
   props:{
     task: Object,
-    selected_task: [Array, Object],
+    selected_task: Array,
   },
   created(){
     this.items = JSON.parse(JSON.stringify(this.selected_task));
   },
   methods:{
+    now(){
+      return moment().format();
+    },
     addHour(){
       const task_id = (!this.task.hasOwnProperty('is_new'))? this.task.task_id: null;
       const new_hour = {
         'end' :null,
         'title': null,
         'remark': null,
-        'start': null,
+        'start': this.now(),
         'task_id': task_id,
         'is_new': true,
       };

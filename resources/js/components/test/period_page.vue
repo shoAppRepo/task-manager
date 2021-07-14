@@ -1,37 +1,45 @@
 <template>
-  <div class="container">
-    <!-- 保存 -->
-    <div class="text-center"> 
-      <button class="bottom-icon btn mb-3" @click="save">
-        保存
-      </button>
-    </div>
-
-    <div class="card" v-for="(period, index) in periods">
-      <div class="card-header d-flex justify-content-between">
-        <div class="row">
-          <datetime type="date" zone="Asia/Tokyo" v-model="period.start" /> 
-          ~
-          <datetime type="date" v-model="period.end" />
-        </div>
-        <button class="btn block p-0">
-          <span class="fas fa-trash-alt" @click="deletePeriod(index)"/>
+  <div>
+    <vue-loading v-if="is_loading" type="spin" color="#333" :size="{ width: '50px', height: '50px' }"></vue-loading>
+    <div v-else class="container">
+      <!-- 保存 -->
+      <div class="text-center"> 
+        <button class="bottom-icon btn mb-3" @click="save">
+          保存
         </button>
       </div>
-    </div>
 
-    <!-- 追加ボタン -->
-    <button 
-      class="btn block"
-      @click="addPeriod()"
-    >
-      <span style="font-size:30px;" class="fas fa-plus-circle"/>
-    </button>
+      <div class="card" v-for="(period, index) in periods">
+        <div class="card-header d-flex justify-content-between">
+          <div class="row">
+            <datetime type="date" zone="Asia/Tokyo" v-model="period.start" /> 
+            ~
+            <datetime type="date" v-model="period.end" />
+          </div>
+          <button class="btn block p-0">
+            <span class="fas fa-trash-alt" @click="deletePeriod(index)"/>
+          </button>
+        </div>
+      </div>
+
+      <!-- 追加ボタン -->
+      <button 
+        class="btn block"
+        @click="addPeriod()"
+      >
+        <span style="font-size:20px;" class="fas fa-plus-circle"/>
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
+import { VueLoading } from 'vue-loading-template'
+
 export default {
+  components:{
+    VueLoading,
+  },
   data(){
     return{
       periods: [],
@@ -43,13 +51,18 @@ export default {
   },
   methods:{
     init(){
+      this.is_loading = true;
+
       axios
         .get('/api/period/index')
         .then((response) => {
           this.periods = response.data.periods;
       });
+
+      this.is_loading = false;
     },
     save(){
+      this.is_loading = true;
       const periods = this.periods;
       const delete_periods = this.delete_periods;
 
@@ -61,6 +74,8 @@ export default {
       }).catch((error) =>{
         this.$toasted.error('更新出来ませんでした');
       });
+
+      this.is_loading = false;
     },  
     deletePeriod(index){
       const item = this.periods[index];

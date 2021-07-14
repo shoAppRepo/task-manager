@@ -15,10 +15,10 @@ class CreateManHoursTable extends Migration
     {
       Schema::create('manhours', function (Blueprint $table) {
         $table->increments('man_hour_id');
-        $table->string('title');
+        $table->string('title')->nullable();
         $table->integer('task_id');
         $table->string('start');
-        $table->string('end');
+        $table->string('end')->nullable();
         $table->string('remark')->nullable();
         $table->timestamps();
 
