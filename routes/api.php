@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PeriodController;
-use App\Http\Controllers\ManHourController;
+use App\Http\Controllers\ManhourController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +23,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['namespace' => 'Cld'], function(): void {
 	Route::group(['prefix' => 'calendar'], function(): void {
-		Route::get('/index', [ManHourController::class, 'index']);
+		Route::get('/index', [CategoryController::class, 'calendarIndex']);
 	});
 });
 

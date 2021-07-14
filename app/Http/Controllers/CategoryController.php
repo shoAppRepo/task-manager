@@ -11,6 +11,13 @@ use Carbon\Carbon;
 
 class CategoryController extends Controller
 {
+  public function calendarIndex()
+  {
+    $manhours = Manhour::get();
+
+    return compact('manhours');
+  }
+  
   public function index($params)
   {
     $period_id = $params[0];
