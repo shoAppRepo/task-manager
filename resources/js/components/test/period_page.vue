@@ -57,9 +57,8 @@ export default {
         .get('/api/period/index')
         .then((response) => {
           this.periods = response.data.periods;
+          this.is_loading = false;
       });
-
-      this.is_loading = false;
     },
     save(){
       this.is_loading = true;
@@ -69,13 +68,13 @@ export default {
       axios
         .post('/api/period/update', {periods, delete_periods})
         .then((response) => {
+          this.is_loading = false;
           this.$toasted.success('更新しました');
           this.periods = response.data.periods;
       }).catch((error) =>{
+        this.is_loading = false;
         this.$toasted.error('更新出来ませんでした');
       });
-
-      this.is_loading = false;
     },  
     deletePeriod(index){
       const item = this.periods[index];

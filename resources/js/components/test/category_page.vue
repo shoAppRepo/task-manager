@@ -197,9 +197,9 @@ export default {
         .then((response) => {
           this.periods = response.data.periods;
           this.items = response.data.items;
+          this.is_loading = false;
         });
 
-      this.is_loading = false;
     },
     save(){
       this.is_loading = true;
@@ -212,16 +212,16 @@ export default {
       axios
         .post('/api/category/update', {items, period_id, delete_categories, delete_tasks, delete_hours})
         .then((response) => {
+          this.is_loading = false;
           this.$toasted.success('更新しました');
           this.items = response.data.items;
           this.delete_tasks = [];
           this.delete_hours = [];
           this.delete_categories = [];
         }).catch((error) =>{
+          this.is_loading = false;
         this.$toasted.error('更新出来ませんでした');
       });
-
-      this.is_loading = false;
     },
     getItems(){
       this.is_loading = true;
@@ -231,9 +231,8 @@ export default {
         .get('/api/category/'+ period_id + '/index')
         .then((response) => {
           this.items = response.data.items;
+          this.is_loading = false;
         });
-
-      this.is_loading = false;
     },
     countCategoryTasks(item){
       return item.tasks.length;
