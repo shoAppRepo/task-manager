@@ -30,7 +30,7 @@
         <!-- 決定 -->
         <div class="container">
           <div class="row justify-content-center">
-            <button class="bottom-icon confirm-btn col-2" @click="confirm()">
+            <button class="bottom-icon confirm-btn col-md-1 col-2" @click="confirm()">
               <span>決定</span>
             </button>
           </div>

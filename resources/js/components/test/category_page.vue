@@ -11,7 +11,7 @@
             </select>
           </div>
           <!-- 保存 -->
-          <button class="bottom-icon btn col-2" @click="save">
+          <button class="bottom-icon btn col-md-1 col-2" @click="save">
             保存
           </button>
         </div>
