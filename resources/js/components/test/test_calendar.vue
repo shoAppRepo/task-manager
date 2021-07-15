@@ -15,13 +15,16 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import jaLocale from "@fullcalendar/core/locales/ja"; // 日本語化用
+import { VueLoading } from 'vue-loading-template'
 
 export default {
   components: {
-    FullCalendar // make the <FullCalendar> tag available
+    FullCalendar, // make the <FullCalendar> tag available
+    VueLoading,
   },
   data() {
     return {
+      is_loading: false,
       calendarOptions: {
         headerToolbar: {
           left: 'prev,next today',
@@ -45,10 +48,12 @@ export default {
   },
   methods: {
     init(){
+      this.is_loading = true;
       axios
         .get('/api/calendar/index')
         .then((response) => {
           this.calendarOptions.events = response.data.manhours;
+          this.is_loading = false;
       });
     },
     getSelectedMonth() {

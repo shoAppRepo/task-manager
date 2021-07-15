@@ -42,6 +42,7 @@ export default {
   },
   data(){
     return{
+      is_loading: false,
       periods: [],
       delete_periods: [],
     };
@@ -56,8 +57,8 @@ export default {
       axios
         .get('/api/period/index')
         .then((response) => {
-          this.periods = response.data.periods;
           this.is_loading = false;
+          this.periods = response.data.periods;
       });
     },
     save(){
