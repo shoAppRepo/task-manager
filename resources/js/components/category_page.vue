@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="body">
     <navbar />
     <div>
-      <h3>工数登録</h3>
+      <h3 class="title">工数登録</h3>
     </div>
     <router-view />
   </div>
@@ -17,3 +17,7 @@ export default {
   },
 };
 </script>
+
+<style >
+
+</style>

@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="body">
     <vue-loading v-if="is_loading" type="spin" color="#333" :size="{ width: '50px', height: '50px' }"></vue-loading>
     <div v-else>
       <div class="container">
         <div class="row mb-4 justify-content-between">
-          <div class="col">
+          <div class="col-8">
             <select v-model="selectedPeriod" @change="getItems" class="col">
               <option value="">---</option>
               <option v-for="period in periods" :value="period.period_id" >{{ periodName(period) }}</option>
@@ -15,43 +15,37 @@
             保存
           </button>
         </div>
-        <div
+        <div class="row">
+          <div
           v-for="(item, itemIndex) in items"
-          class="col mb-4"
+          class="col-sm-6 mb-4"
         >
-          <div class="card mb-4">
-            <div class="card-header">
+          <div class="card">
+            <div class="card-header category-header">
               <div class="row">
                 <div class="col">
                   <textarea style="width:100%" type="text" :value="item.name" @change="changeCategoryName(itemIndex, $event.target.value)"></textarea>
-                  <div>{{ countCategoryTasks(item) }}件：{{ totalCategoryHours(item)}}</div>
                 </div>
                 <button class="btn block p-0 col-1">
-                  <span class="fas fa-trash-alt ml-2" @click="deleteCategory(itemIndex)"/>
+                  <span class="far fa-trash-alt ml-2" @click="deleteCategory(itemIndex)"/>
                 </button>
               </div>
             </div>
-            <div class="card-body">
-              <div class="tasks">
-                <div 
-                  v-for="(task, taskIndex) in item.tasks"
-                  class="card mb-3"
-                >
-                  
-                  <div 
-                    class="card-header"
-                  >
+            <div class="card-body pt-0">
+              <div class="text-left mb-3">{{ countCategoryTasks(item) }}件：{{ totalCategoryHours(item)}}</div>
+
+              <div 
+                v-for="(task, taskIndex) in item.tasks"
+                class="task-content mb-3"
+              >
+                <div class="container">
                   <div class="row">
-                    <div class="col">
-                      <textarea type="text" style="width:100%" :value="task.task.name" @change="changeValue('name', itemIndex, taskIndex, $event.target.value)"></textarea>
-                      <div class="total-task-hour" @click="openModalHour(itemIndex, taskIndex)">{{ totalTaskHours(task.task) }}</div>
-                    </div>
+                    <textarea type="text" class="title-textarea col p-0" :value="task.task.name" @change="changeValue('name', itemIndex, taskIndex, $event.target.value)"></textarea>
                     <button class="btn block p-0 col-1">
-                      <span class="fas fa-trash-alt ml-2" @click="deleteTask(itemIndex, taskIndex)"/>
+                      <span class="far fa-trash-alt ml-2" @click="deleteTask(itemIndex, taskIndex)"/>
                     </button>
                   </div>
-                  </div>
-
+                  <div class="total-task-hour" @click="openModalHour(itemIndex, taskIndex)">{{ totalTaskHours(task.task) }}</div>
                 </div>
               </div>
 
@@ -60,18 +54,18 @@
                 class="btn block"
                 @click="addTask(item, itemIndex)"
               >
-                <span style="font-size:20px;" class="fas fa-plus-circle"/>
+                <span style="font-size:20px;" class="far fa-plus-square"/>
               </button>
             </div>
           </div>
         </div>
-
+        </div>
         <!-- 追加ボタン -->
         <button 
           class="btn block"
           @click="addCategory()"
         >
-          <span style="font-size:20px;" class="fas fa-plus-circle"/>
+          <span style="font-size:20px;" class="far fa-plus-square"/>
         </button>
 
       </div>
@@ -317,13 +311,14 @@ export default {
 </script>
 
 <style>
+
 .bottom-icon {
   display: inline-block;
   padding: 0px;
   text-decoration: none;
-  background: #668ad8;/*ボタン色*/
+  background: #66FF99;/*ボタン色*/
   color: #FFF;
-  border-bottom: solid 4px #627295;
+  border-bottom: solid 4px #66CC66;
   border-radius: 3px;
 }
 
@@ -336,6 +331,15 @@ export default {
 }
 
 .total-task-hour{
+  text-align: start;
   cursor: pointer;
+}
+
+.title-textarea {
+  outline:none;
+}
+
+.task-content{
+  border-radius: 5%;
 }
 </style>

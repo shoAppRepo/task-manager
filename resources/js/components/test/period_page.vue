@@ -17,7 +17,7 @@
             <datetime type="date" v-model="period.end" />
           </div>
           <button class="btn block p-0">
-            <span class="fas fa-trash-alt" @click="deletePeriod(index)"/>
+            <span class="far fa-trash-alt" @click="deletePeriod(index)"/>
           </button>
         </div>
       </div>
@@ -27,7 +27,7 @@
         class="btn block"
         @click="addPeriod()"
       >
-        <span style="font-size:20px;" class="fas fa-plus-circle"/>
+        <span style="font-size:20px;" class="far fa-plus-square"/>
       </button>
     </div>
   </div>
@@ -103,9 +103,9 @@ export default {
   display: inline-block;
   padding: 0.5em 1em;
   text-decoration: none;
-  background: #668ad8;/*ボタン色*/
+  background: #66FF99;/*ボタン色*/
   color: #FFF;
-  border-bottom: solid 4px #627295;
+  border-bottom: solid 4px #66CC66;
   border-radius: 3px;
 }
 

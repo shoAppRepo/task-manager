@@ -10,7 +10,7 @@
           ~
           <datetime type="datetime" zone="Asia/Tokyo" v-model="item.end" />
           <button class="btn block p-0">
-            <span class="fas fa-trash-alt" @click="deleteHour(index)"/>
+            <span class="far fa-trash-alt ml-1" @click="deleteHour(index)"/>
           </button>
         </div>
 
@@ -19,7 +19,7 @@
           class="btn add-button mb-3"
           @click="addHour()"
         >
-          <span style="font-size:30px;" class="fas fa-plus-circle"/>
+          <span style="font-size:30px;" class="far fa-plus-square"/>
         </button>
 
         <!-- 閉じる -->
@@ -28,10 +28,12 @@
         </button>
 
         <!-- 決定 -->
-        <div class="text-center">
-          <button class="bottom-icon confirm-btn" @click="confirm()">
-            <span>決定</span>
-          </button>
+        <div class="container">
+          <div class="row justify-content-center">
+            <button class="bottom-icon confirm-btn col-2" @click="confirm()">
+              <span>決定</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -142,7 +144,7 @@ export default {
 }
 
 .confirm-btn{
-  width: 30%;
+  outline:none;
 }
 
 </style>
