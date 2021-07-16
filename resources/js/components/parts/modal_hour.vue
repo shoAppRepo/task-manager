@@ -66,7 +66,7 @@ export default {
       const task_id = (!this.task.hasOwnProperty('is_new'))? this.task.task_id: null;
       const new_hour = {
         'end' :null,
-        'title': null,
+        'title': this.task.name,
         'remark': null,
         'start': this.now(),
         'task_id': task_id,

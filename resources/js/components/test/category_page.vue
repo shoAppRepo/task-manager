@@ -32,7 +32,9 @@
               </div>
             </div>
             <div class="card-body pt-0">
-              <div class="text-left mb-3">{{ countCategoryTasks(item) }}件：{{ totalCategoryHours(item)}}</div>
+              <div class="text-left mb-3">
+                {{ countCategoryTasks(item) }}件：{{ totalPoint(item) }}pt：{{ totalCategoryHours(item)}}
+              </div>
 
               <div 
                 v-for="(task, taskIndex) in item.tasks"
@@ -45,6 +47,8 @@
                       <span class="far fa-trash-alt ml-2" @click="deleteTask(itemIndex, taskIndex)"/>
                     </button>
                   </div>
+                  <input type="text" v-model="task.point" class="col-2">
+                  <span>pt</span>
                   <div class="total-task-hour" @click="openModalHour(itemIndex, taskIndex)">{{ totalTaskHours(task.task) }}</div>
                 </div>
               </div>
@@ -133,21 +137,30 @@ export default {
     totalTaskHours(){
       return (task) => {
         const hours = this.calcTaskHours(task);
+        const hourandminute = this.getHourAndMinute(hours);
 
-        let h = Math.floor(hours / 3600000);//時間
-        let m = Math.floor((hours - h * 3600000) / 60000);//分
+        return hourandminute['hour'] + "時間" + hourandminute['minute'] + "分";//1時間0分
+      };
+    },
+    totalPoint(){
+      return(item)=>{
+        let total_point = 0;
+        item['tasks'].forEach((task) => {
+          const point = Number(task.point);
+          if(point >= 0){
+            total_point += point;
+          }
+        });
 
-        return h + "時間" + m + "分";//1時間0分
+        return total_point;
       };
     },
     totalCategoryHours(){
       return (task) => {
         const hours = this.calcCategoryHours(task);
+        const hourandminute = this.getHourAndMinute(hours);
 
-        let h = Math.floor(hours / 3600000);//時間
-        let m = Math.floor((hours - h * 3600000) / 60000);//分
-
-        return h + "時間" + m + "分";//1時間0分
+        return hourandminute['hour'] + "時間" + hourandminute['minute'] + "分";//1時間0分
       };
     },
     calcCategoryHours(){
@@ -292,6 +305,12 @@ export default {
       const taskIndex = this.selected_index['task'];
       this.$set(this.items[itemIndex]['tasks'][taskIndex]['task'], 'manhours', new_items); 
       this.delete_hours = delete_hours;
+    },
+    getHourAndMinute(hours){
+      let h = Math.floor(hours / 3600000);//時間
+      let m = Math.floor((hours - h * 3600000) / 60000);//分
+
+      return{'hour' :h,'minute':m};
     },
     openModalHour(itemIndex, taskIndex){
       this.is_modal_open = true;
