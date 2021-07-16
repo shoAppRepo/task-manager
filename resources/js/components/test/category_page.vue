@@ -47,7 +47,7 @@
                       <span class="far fa-trash-alt ml-2" @click="deleteTask(itemIndex, taskIndex)"/>
                     </button>
                   </div>
-                  <input type="text" v-model="task.point" class="col-2">
+                  <input type="text" v-model="task.task.point" class="col-2">
                   <span>pt</span>
                   <div class="total-task-hour" @click="openModalHour(itemIndex, taskIndex)">{{ totalTaskHours(task.task) }}</div>
                 </div>
@@ -146,7 +146,7 @@ export default {
       return(item)=>{
         let total_point = 0;
         item['tasks'].forEach((task) => {
-          const point = Number(task.point);
+          const point = Number(task.task.point);
           if(point >= 0){
             total_point += point;
           }
@@ -260,6 +260,7 @@ export default {
           'is_new': true,
           'period_id': this.$store.state.period.selected_period,
           'task_id': null,
+          'point': null,
         }
       };
 
