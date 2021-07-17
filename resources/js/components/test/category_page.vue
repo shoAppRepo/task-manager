@@ -33,7 +33,7 @@
             </div>
             <div class="card-body pt-0">
               <div class="text-left mb-3">
-                {{ countCategoryTasks(item) }}件：{{ totalPoint(item) }}pt：{{ totalCategoryHours(item)}}
+                {{ countCategoryTasks(item) }}件：{{ totalPoint(item) }}pt：{{ totalCategoryHours(item)}}({{ showDeciminalNumber(item) }})
               </div>
 
               <div 
@@ -140,6 +140,20 @@ export default {
         const hourandminute = this.getHourAndMinute(hours);
 
         return hourandminute['hour'] + "時間" + hourandminute['minute'] + "分";//1時間0分
+      };
+    },
+    showDeciminalNumber(){
+      return (task) => {
+        const hours = this.calcCategoryHours(task);
+        const hourandminute = this.getHourAndMinute(hours);
+        let minute = hourandminute['minute']/60;
+        //小数点移動
+        minute *= 100;
+        // 四捨五入
+        let fix_minute = Math.round(minute);
+        // 小数点を戻す
+        fix_minute /= 100;
+        return hourandminute['hour'] + fix_minute;
       };
     },
     totalPoint(){
