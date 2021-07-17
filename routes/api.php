@@ -17,27 +17,25 @@ use App\Http\Controllers\ManhourController;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::group(['namespace' => 'Cld'], function(): void {
-	Route::group(['prefix' => 'calendar'], function(): void {
-		Route::get('/index', [CategoryController::class, 'calendarIndex']);
-	});
-});
-
-Route::group(['namespace' => 'Ctg'], function(): void { 
-  Route::group(['prefix' => 'category'], function(): void {
-		Route::get('{id}/index', [CategoryController::class, 'index']);
-		Route::post('update', [CategoryController::class, 'update']);
-	});
-});
-
-Route::group(['namespace' => 'Prd'], function(): void { 
-	Route::group(['prefix' => 'period'], function(): void {
-		Route::get('{id}/indexWithItems', [PeriodController::class, 'indexWithItems']);
-		Route::get('index', [PeriodController::class, 'index']);
-		Route::post('/update', [PeriodController::class, 'update']);
-	});
+Route::group(['middleware' => 'auth:api'], function(){
+  Route::group(['namespace' => 'Cld'], function(): void {
+    Route::group(['prefix' => 'calendar'], function(): void {
+      Route::get('/index', [CategoryController::class, 'calendarIndex']);
+    });
+  });
+  
+  Route::group(['namespace' => 'Ctg'], function(): void { 
+    Route::group(['prefix' => 'category'], function(): void {
+      Route::get('{id}/index', [CategoryController::class, 'index']);
+      Route::post('update', [CategoryController::class, 'update']);
+    });
+  });
+  
+  Route::group(['namespace' => 'Prd'], function(): void { 
+    Route::group(['prefix' => 'period'], function(): void {
+      Route::get('{id}/indexWithItems', [PeriodController::class, 'indexWithItems']);
+      Route::get('index', [PeriodController::class, 'index']);
+      Route::post('/update', [PeriodController::class, 'update']);
+    });
+  });
 });

@@ -75,6 +75,15 @@ return [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
+
+        'api' => [
+          'driver' => 'token',
+          'provider' => 'users',
+        ],
+
+        'user_token' => [
+          'driver' => 'user_token',
+        ],
     ],
 
     /*

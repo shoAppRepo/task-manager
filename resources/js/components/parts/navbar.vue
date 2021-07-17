@@ -23,7 +23,7 @@
           <a class="nav-link white-font" href="/register">登録</a>
         </li>
         <li>
-          <a class="nav-link white-font" href="#" @click.prevent="logout">ログアウト</a>
+          <a class="nav-link white-font" href="/logout" @click.prevent="logout">ログアウト</a>
         </li>
       </ul>
     </div>
@@ -37,7 +37,8 @@ export default {
       axios
         .post('/logout')
         .then((response) => {
-          this.$toasted.success('ログアウトしました');
+          this.$store.commit('period/setSelectedPeriod');
+          window.location.reload();
         });
     },
   }

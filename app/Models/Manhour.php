@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Manhour extends Model
 {
-  protected $fillable = ['man_hour_id', 'task_id', 'start', 'end', 'remark', 'title'];
+  protected $fillable = ['man_hour_id', 'task_id', 'start', 'end', 'remark', 'title', 'user_id'];
 
   protected $primaryKey = 'man_hour_id';
 }

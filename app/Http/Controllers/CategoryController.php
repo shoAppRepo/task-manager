@@ -13,24 +13,26 @@ class CategoryController extends Controller
 {
   public function calendarIndex()
   {
-    $manhours = Manhour::get();
+    $login_id = \Auth::id();
+    $manhours = Manhour::where('user_id', $login_id)->get();
 
     return compact('manhours');
   }
   
   public function index($params)
   {
+    $login_id = \Auth::id();
     $period_id = $params[0];
     $items = [];
 
     // カテゴリー一覧取得
-    $categories = Category::where('period_id', $period_id)->orderby('category_id')->get();
+    $categories = Category::where('user_id', $login_id)->where('period_id', $period_id)->orderby('category_id')->get();
 
     // taskを取得
-    $tasks = Task::where('period_id', $period_id)->orderby('task_id')->get();
+    $tasks = Task::where('user_id', $login_id)->where('period_id', $period_id)->orderby('task_id')->get();
 
     // manhours取得
-    $manhours = Manhour::orderby('man_hour_id')->get();
+    $manhours = Manhour::where('user_id', $login_id)->orderby('man_hour_id')->get();
 
     // カテゴリーとtaskを紐付け
     foreach($categories as $category){
@@ -65,6 +67,7 @@ class CategoryController extends Controller
 
   public function update(Request $request)
   {
+    $login_id = \Auth::id();
     $items = $request->input('items');
     $period_id = $request->input('period_id');
     $delete_tasks = $request->input('delete_tasks');
@@ -72,15 +75,15 @@ class CategoryController extends Controller
     $delete_categories = $request->input('delete_categories');
 
     foreach($delete_categories as $delete_category){
-      Category::where('category_id', $delete_category['category_id'])->delete();
+      Category::where('user_id', $login_id)->where('category_id', $delete_category['category_id'])->delete();
     }    
 
     foreach($delete_tasks as $delete_task){
-      Task::where('task_id', $delete_task['task_id'])->delete();
+      Task::where('user_id', $login_id)->where('task_id', $delete_task['task_id'])->delete();
     }
 
     foreach($delete_hours as $delete_hour){
-      Manhour::where('man_hour_id', $delete_hour['man_hour_id'])->delete();
+      Manhour::where('user_id', $login_id)->where('man_hour_id', $delete_hour['man_hour_id'])->delete();
     }
 
     
@@ -92,10 +95,11 @@ class CategoryController extends Controller
       unset($copy_item['tasks']);
       if(array_key_exists('is_new', $item)){
         unset($copy_item['is_new'], $copy_item['category_id']);
+        $copy_item['user_id'] = $login_id;
         $inserted_category = Category::create($copy_item);
         $category_id = $inserted_category->category_id;
       }else{
-        Category::where('category_id', $category_id)->update($copy_item);
+        Category::where('user_id', $login_id)->where('category_id', $category_id)->update($copy_item);
       }
       // tasksの登録・更新
       $tasks = $item['tasks'];
@@ -107,11 +111,12 @@ class CategoryController extends Controller
         if(array_key_exists('is_new', $task_datum)){
           unset($task_datum['is_new'], $task_datum['manhours'], $task_datum['task_id']);
           $task_datum['category_id'] = $category_id;
+          $task_datum['user_id'] = $login_id;
           $inserted_task = Task::create($task_datum);
           $task_id = $inserted_task->task_id;
         }else{
           unset($task_datum['manhours']);
-          Task::where('task_id', $task_datum['task_id'])->update($task_datum);
+          Task::where('user_id', $login_id)->where('task_id', $task_datum['task_id'])->update($task_datum);
         }
 
         // manhoursの登録・更新
@@ -119,9 +124,10 @@ class CategoryController extends Controller
           foreach($manhours as $index => $manhour){
             if(array_key_exists('is_new', $manhour)){
               $manhour['task_id'] = $task_id;
+              $manhour['user_id'] = $login_id;
               Manhour::create($manhour);
             }else{
-              Manhour::where('man_hour_id', $manhour['man_hour_id'])->update($manhour);
+              Manhour::where('user_id', $login_id)->where('man_hour_id', $manhour['man_hour_id'])->update($manhour);
             }
           }
         }

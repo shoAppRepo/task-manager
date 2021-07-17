@@ -20,6 +20,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'api_token',
     ];
 
     /**
@@ -43,4 +44,7 @@ class User extends Authenticatable
 
     protected $primaryKey = 'id';
     protected $increments = true;
+
+    
+    
 }
