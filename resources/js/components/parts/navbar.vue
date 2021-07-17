@@ -19,6 +19,12 @@
         <li>
           <a class="nav-link white-font" href="/">集計画面</a>
         </li>
+        <li>
+          <a class="nav-link white-font" href="/register">登録</a>
+        </li>
+        <li>
+          <a class="nav-link white-font" href="#" @click.prevent="logout">ログアウト</a>
+        </li>
       </ul>
     </div>
   </nav>
@@ -26,7 +32,15 @@
 
 <script>
 export default {
-
+  methods:{
+    logout() {
+      axios
+        .post('/logout')
+        .then((response) => {
+          this.$toasted.success('ログアウトしました');
+        });
+    },
+  }
 }
 </script>
 

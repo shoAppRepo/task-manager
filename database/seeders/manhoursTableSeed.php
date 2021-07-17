@@ -20,6 +20,7 @@ class manhoursTableSeed extends Seeder
         'start' => '2021-06-01 09:30',
         'end' => '2021-06-01 11:30',
         'remark' => '画面のレイアウトを検討、ペーパープロトタイプ作成',
+        'user_id' => 1,
       ]);
 
       DB::table('manhours')->insert([
@@ -28,6 +29,7 @@ class manhoursTableSeed extends Seeder
         'start' => '2021-06-01 12:15',
         'end' => '2021-06-01 13:30',
         'remark' => 'vueでカレンダー実装',
+        'user_id' => 1,
       ]);
 
       DB::table('manhours')->insert([
@@ -36,6 +38,7 @@ class manhoursTableSeed extends Seeder
         'start' => '2021-06-02 12:15',
         'end' => '2021-06-03 13:30',
         'remark' => 'モーダル実装',
+        'user_id' => 1,
       ]);
     }
 }

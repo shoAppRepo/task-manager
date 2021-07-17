@@ -18,6 +18,7 @@ class PeriodsTableSeeder extends Seeder
         'period_id' => 1,
         'start' => '2021-06-01',
         'end' => '2021-06-30',
+        'user_id' => 1,
       ]);
     }
 }

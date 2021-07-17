@@ -20,4 +20,4 @@ Auth::routes();
 */
 Route::get('{any?}', function () {
   return view('spa_top');
-})->where('any', '.*')->name('spa_top');
+})->where('any', '.*')->name('spa_top')->middleware('auth');
