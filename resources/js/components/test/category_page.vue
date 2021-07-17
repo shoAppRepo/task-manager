@@ -33,7 +33,7 @@
             </div>
             <div class="card-body pt-0">
               <div class="text-left mb-3">
-                {{ countCategoryTasks(item) }}件：{{ totalPoint(item) }}pt：{{ totalCategoryHours(item)}}({{ showDeciminalNumber(item) }})
+                {{ countCategoryTasks(item) }}件：{{ totalPoint(item) }}pt：{{ totalCategoryHours(item)}}({{ showcategoryDeciminalNumber(item) }})
               </div>
 
               <div 
@@ -49,7 +49,7 @@
                   </div>
                   <input type="text" v-model="task.task.point" class="col-2">
                   <span>pt</span>
-                  <div class="total-task-hour" @click="openModalHour(itemIndex, taskIndex)">{{ totalTaskHours(task.task) }}</div>
+                  <div class="total-task-hour" @click="openModalHour(itemIndex, taskIndex)">{{ totalTaskHours(task.task) }}({{ showTaskDeciminalNumber(task.task) }})</div>
                 </div>
               </div>
 
@@ -142,7 +142,7 @@ export default {
         return hourandminute['hour'] + "時間" + hourandminute['minute'] + "分";//1時間0分
       };
     },
-    showDeciminalNumber(){
+    showcategoryDeciminalNumber(){
       return (task) => {
         const hours = this.calcCategoryHours(task);
         const hourandminute = this.getHourAndMinute(hours);
@@ -153,7 +153,21 @@ export default {
         let fix_minute = Math.round(minute);
         // 小数点を戻す
         fix_minute /= 100;
-        return hourandminute['hour'] + fix_minute;
+        return hourandminute['hour'] + fix_minute + 'h';
+      };
+    },
+    showTaskDeciminalNumber(){
+      return (task) => {
+        const hours = this.calcTaskHours(task);
+        const hourandminute = this.getHourAndMinute(hours);
+        let minute = hourandminute['minute']/60;
+        //小数点移動
+        minute *= 100;
+        // 四捨五入
+        let fix_minute = Math.round(minute);
+        // 小数点を戻す
+        fix_minute /= 100;
+        return hourandminute['hour'] + fix_minute + 'h';
       };
     },
     totalPoint(){
