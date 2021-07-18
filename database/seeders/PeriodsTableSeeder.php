@@ -15,7 +15,6 @@ class PeriodsTableSeeder extends Seeder
     public function run()
     {
       DB::table('periods')->insert([
-        'period_id' => 1,
         'start' => '2021-06-01',
         'end' => '2021-06-30',
         'user_id' => 1,
