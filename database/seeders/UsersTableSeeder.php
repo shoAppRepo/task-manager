@@ -22,7 +22,7 @@ final class UsersTableSeeder extends Seeder
       $userId = $manager->table('users')->insertGetId([
         'name' => 'laravel user',
         'email' => 'mail@gmail.com',
-        'password' => $hasher->make('password'),
+        'password' => $hasher->make('shohei1230'),
         'created_at' => $datatime,
       ]);
 
