@@ -33,7 +33,8 @@
             </div>
             <div class="card-body pt-0">
               <div class="text-left mb-3">
-                {{ countCategoryTasks(item) }}件：{{ totalPoint(item) }}pt：{{ totalCategoryHours(item)}}({{ showcategoryDeciminalNumber(item) }})
+                <div>{{ countCategoryTasks(item) }}件({{ totalPoint(item) }}pt)</div>
+                <div>{{ totalCategoryHours(item)}}({{ showcategoryDeciminalNumber(item) }})</div>
               </div>
 
               <div 
