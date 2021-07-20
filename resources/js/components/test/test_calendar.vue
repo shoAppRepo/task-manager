@@ -49,7 +49,8 @@ export default {
         editable: true,
         selectable: true,
         events:[],
-        dateClick: this.openModalCalendar,
+        dateClick: this.createItem,
+        // eventClick: this.updateItem,
       },
     };
   },
@@ -83,11 +84,17 @@ export default {
     getSelectedMonth() {
       let calendarApi = this.$refs.cc.getApi();
     },
-    openModalCalendar(e){
+    createItem(e){
       this.selected_time = e.dateStr;
+      this.openModalCalendar();
+    },
+    // updateItem(e){
+    //   console.log(e);
+    // },
+    openModalCalendar(){
       this.modal_open = true;
     },
-    closeModalCalendar(e){
+    closeModalCalendar(){
       this.modal_open = false;
     },
   }

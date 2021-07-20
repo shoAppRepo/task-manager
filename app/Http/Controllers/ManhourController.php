@@ -24,7 +24,7 @@ class ManhourController extends Controller
       $item['user_id'] = \Auth::id();
       Manhour::create($item);
     }else{
-      Manhour::where('task_id', $item['task_id'])->update($item);
+      Manhour::where('manhour_id', $item['manhour_id'])->update($item);
     }
 
     return $this->index();
