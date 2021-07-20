@@ -5,7 +5,15 @@
         ref="cc"
         :options="calendarOptions"
       />
+
+      <modal_calendar
+        v-if="modal_open"
+        :selected_time="selected_time"
+        @save="save"
+        @close="closeModalCalendar"
+      />
     </div>
+
   </div>
 </template>
 
@@ -15,16 +23,20 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import jaLocale from "@fullcalendar/core/locales/ja"; // 日本語化用
-import { VueLoading } from 'vue-loading-template'
+import { VueLoading } from 'vue-loading-template';
+import modal_calendar from '../parts/modal_calendar';
 
 export default {
   components: {
-    FullCalendar, // make the <FullCalendar> tag available
+    modal_calendar,
+    FullCalendar, 
     VueLoading,
   },
   data() {
     return {
+      modal_open: false,
       is_loading: false,
+      selected_time: '',
       calendarOptions: {
         headerToolbar: {
           left: 'prev,next today',
@@ -32,11 +44,12 @@ export default {
           right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
         plugins: [ dayGridPlugin, timeGridPlugin, interactionPlugin ],
-        initialView: 'timeGridDay',
+        initialView: 'timeGridWeek',
         locale: jaLocale,
         editable: true,
         selectable: true,
         events:[],
+        dateClick: this.openModalCalendar,
       },
     };
   },
@@ -56,31 +69,30 @@ export default {
           this.is_loading = false;
       });
     },
+    save(item){
+      axios
+        .post('/api/task/update', {item})
+        .then((response) => {
+          this.calendarOptions.events = response.data.manhours;
+          this.$toasted.success('更新しました');
+          this.closeModalCalendar();
+        }).catch((error) => {
+          this.$toasted.error('更新できませんでした');
+        });
+    },
     getSelectedMonth() {
       let calendarApi = this.$refs.cc.getApi();
+    },
+    openModalCalendar(e){
+      this.selected_time = e.dateStr;
+      this.modal_open = true;
+    },
+    closeModalCalendar(e){
+      this.modal_open = false;
     },
   }
 }
 </script>
 
 <style>
-.top-page {
-  display: flex;
-  min-height: 100%;
-}
-
-.sidebar {
-  width:20%;
-  background-color: blue;
-}
-
-.demo-app-main {
-  flex-grow: 1;
-  padding: 3em;
-}
-
-.fc { /* the calendar root */
-  max-width: 1100px;
-  margin: 0 auto;
-}
 </style>

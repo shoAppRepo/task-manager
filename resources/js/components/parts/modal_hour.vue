@@ -128,20 +128,6 @@ export default {
 .modal-enter, .modal-leave-to {
   opacity: 0;
 }
-.close-button{
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  border-radius: 3px;
-  background-color: red;
-  color: white;
-  padding: 2px 10px;
-  font-size: 20px;
-}
-
-.close-button:hover{
-  color: white;
-}
 
 .confirm-btn{
   outline:none;

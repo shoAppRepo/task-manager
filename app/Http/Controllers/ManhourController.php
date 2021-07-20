@@ -9,8 +9,24 @@ class ManhourController extends Controller
 {
   public function index()
   {
-    $manhours = Manhour::get();
+    $login_id = \Auth::id();
+    $manhours = Manhour::where('user_id', $login_id)->get();
 
     return compact('manhours');
+  }
+
+  public function update(Request $request)
+  {
+    $item = $request->input('item');
+
+    if($item['is_new']){
+      unset($item['is_new']);
+      $item['user_id'] = \Auth::id();
+      Manhour::create($item);
+    }else{
+      Manhour::where('task_id', $item['task_id'])->update($item);
+    }
+
+    return $this->index();
   }
 }

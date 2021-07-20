@@ -262,7 +262,7 @@ export default {
           this.delete_categories = [];
         }).catch((error) =>{
           this.is_loading = false;
-        this.$toasted.error('更新出来ませんでした');
+          this.$toasted.error('更新出来ませんでした');
       });
     },
     getItems(){

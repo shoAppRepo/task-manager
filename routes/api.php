@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PeriodController;
 use App\Http\Controllers\ManhourController;
+use App\Http\Controllers\TaskController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +38,13 @@ Route::group(['middleware' => 'auth:api'], function(){
       Route::get('{id}/indexWithItems', [PeriodController::class, 'indexWithItems']);
       Route::get('index', [PeriodController::class, 'index']);
       Route::post('/update', [PeriodController::class, 'update']);
+    });
+  });
+
+  Route::group(['namespace' => 'tsk'], function(): void {
+    Route::group(['prefix' => 'task'], function(): void {
+      Route::get('index', [TaskController::class, 'index']);
+      Route::post('update', [ManhourController::class, 'update']);
     });
   });
 });
