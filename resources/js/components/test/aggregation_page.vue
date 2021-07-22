@@ -43,7 +43,7 @@
                     <div class="col">{{ task.task.point }}pt</div>
                   </div>
                 </div>
-                <div class="boreder-dotted-line" />
+                <!-- <div class="boreder-dotted-line" /> -->
               </div>
             </div>
           </div>
@@ -362,6 +362,6 @@ export default {
 }
 
 .task-content{
-  border-radius: 5%;
+  border: solid 1px #66CC66;
 }
 </style>
