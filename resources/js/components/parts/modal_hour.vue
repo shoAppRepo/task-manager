@@ -3,6 +3,10 @@
     <div class="modal modal-overlay" @click.self="$emit('close')">
 
       <div class="modal-content">
+        <div class="row mx-auto mb-2">
+          <input type="number" v-model="task.point">
+          <span>pt</span>
+        </div>
         <div v-for="(item, index) in items" class="row mb-2 mx-auto">
           <input type="text" v-model="item.title">
           <span class="mr-2">：</span>

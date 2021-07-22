@@ -16,9 +16,9 @@
         <li class="nav-item">
           <a class="nav-link white-font" href="/calendar">カレンダー</a>
         </li>
-        <!-- <li>
-          <a class="nav-link white-font" href="/">集計画面</a>
-        </li> -->
+        <li>
+          <a class="nav-link white-font" href="/aggregation">集計画面</a>
+        </li>
         <li>
           <a class="nav-link white-font" href="/logout" @click.prevent="logout">ログアウト</a>
         </li>

@@ -6,12 +6,12 @@
         <div class="row mb-4 justify-content-between">
           <div class="col-8">
             <select v-model="selectedPeriod" @change="getItems" class="col">
-              <option value="">---</option>
+              <option disabled value=null>期間を選択してください</option>
               <option v-for="period in periods" :value="period.period_id" >{{ periodName(period) }}</option>
             </select>
           </div>
           <!-- 保存 -->
-          <button class="bottom-icon btn col-md-1 col-2" @click="save">
+          <button v-if="$store.state.period.selected_period" class="bottom-icon btn col-md-1 col-2" @click="save">
             保存
           </button>
         </div>
@@ -34,7 +34,7 @@
             <div class="card-body pt-0">
               <div class="text-left mb-3">
                 <div>{{ countCategoryTasks(item) }}件({{ totalPoint(item) }}pt)</div>
-                <div>{{ totalCategoryHours(item)}}({{ showcategoryDeciminalNumber(item) }})</div>
+                <!-- <div>{{ totalCategoryHours(item)}}({{ showcategoryDeciminalNumber(item) }})</div> -->
               </div>
 
               <div 
@@ -44,13 +44,20 @@
                 <div class="container">
                   <div class="row">
                     <textarea type="text" class="title-textarea col p-0" :value="task.task.name" @change="changeValue('name', itemIndex, taskIndex, $event.target.value)"></textarea>
-                    <button class="btn block p-0 col-1">
-                      <span class="far fa-trash-alt ml-2" @click="deleteTask(itemIndex, taskIndex)"/>
-                    </button>
+                    <div>
+                      <div>
+                        <button class="btn block">
+                          <span class="far fa-trash-alt ml-2" @click="deleteTask(itemIndex, taskIndex)"/>
+                        </button>
+                      </div>
+                      <div>
+                        <button class="btn block">
+                          <span class="fas fa-pencil-alt ml-2" @click="openModalHour(itemIndex, taskIndex)"/>
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <input type="text" v-model="task.task.point" class="col-2">
-                  <span>pt</span>
-                  <div class="total-task-hour" @click="openModalHour(itemIndex, taskIndex)">{{ totalTaskHours(task.task) }}({{ showTaskDeciminalNumber(task.task) }})</div>
+                  <!-- <div class="total-task-hour" @click="openModalHour(itemIndex, taskIndex)">{{ totalTaskHours(task.task) }}({{ showTaskDeciminalNumber(task.task) }})</div> -->
                 </div>
               </div>
 

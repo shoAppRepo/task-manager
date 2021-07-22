@@ -24,7 +24,7 @@ class CategoryController extends Controller
     $login_id = \Auth::id();
     $period_id = $params[0];
     $items = [];
-
+    
     // カテゴリー一覧取得
     $categories = Category::where('user_id', $login_id)->where('period_id', $period_id)->orderby('category_id')->get();
 

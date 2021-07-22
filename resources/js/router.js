@@ -10,6 +10,9 @@ import category_page from './components/category_page.vue';
 import period_page_route from './routes/period_page';
 import period_page from './components/period_page.vue';
 
+import aggregation_page_route from './routes/aggregation_page';
+import aggregation_page from './components/aggregation_page.vue';
+
 
 Vue.use(VueRouter);
 
@@ -30,6 +33,11 @@ const router = new VueRouter({
       path: '/periods',
       component: period_page,
       children: period_page_route,
+    },
+    {
+      path: '/aggregation',
+      component: aggregation_page,
+      children: aggregation_page_route,
     },
   ],
 });
