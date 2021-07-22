@@ -15,17 +15,32 @@ class ManhourController extends Controller
     return compact('manhours');
   }
 
+  public function insert(Request $request)
+  {
+    $item = $request->input('item');
+
+    $item['user_id'] = \Auth::id();
+    Manhour::create($item);
+
+    return $this->index();
+  }
+
   public function update(Request $request)
   {
     $item = $request->input('item');
 
-    if($item['is_new']){
-      unset($item['is_new']);
-      $item['user_id'] = \Auth::id();
-      Manhour::create($item);
-    }else{
-      Manhour::where('manhour_id', $item['manhour_id'])->update($item);
-    }
+    $item['user_id'] = \Auth::id();
+    Manhour::where('man_hour_id', $item['man_hour_id'])->update($item);
+
+    return $this->index();
+  }
+
+  public function delete(Request $request)
+  {
+    $item = $request->input('item');
+
+    $item['user_id'] = \Auth::id();
+    Manhour::where('man_hour_id', $item['man_hour_id'])->delete();
 
     return $this->index();
   }

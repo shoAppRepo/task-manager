@@ -5,8 +5,8 @@
         <div class="mx-auto mb-2">
           <div class="text-center mb-2">
             タスク：
-            <select :value="item.task_id" @change="changeValue('task_id', $event.target.value)">
-              <option value="">---</option>
+            <select v-model="item.task_id" @change="changeValue('task_id', $event.target.value)">
+              <option disabled value="">タスクを選択してください</option>
               <option v-for="task in tasks" :value="task.task_id">{{ task.name }}</option>
             </select>
           </div>
@@ -20,14 +20,24 @@
           </div>
         </div>
 
-        <!-- 保存 -->
+        <!-- ボタン -->
         <div class="container">
           <div class="row justify-content-center">
-            <button class="bottom-icon confirm-btn col-md-1 col-2" @click="$emit('save', item)">
+            <button class="bottom-icon save-btn col-md-1 col-2" @click="$emit('save', item)">
               <span>保存</span>
+            </button>
+
+            <button
+              v-if="method === 'update'"
+              class="bottom-icon delete-btn col-md-1 col-2 ml-3" 
+              @click="$emit('deleteItem', item)"
+            >
+              <span>削除</span>
             </button>
           </div>
         </div>
+
+        
 
       </div>
     </div>
@@ -43,11 +53,18 @@ export default {
     };
   },
   props:{
-    selected_time: String,
+    method: String,
+    selected_time: Object,
+    selected_item: Object,
   },
   created(){
     this.init();
-    this.makeItem();
+
+    if(this.method === 'insert'){
+      this.makeItem();
+    }else{
+      this.item = { ...this.selected_item};
+    }
   },
   methods:{
     init(){
@@ -59,12 +76,11 @@ export default {
     },
     makeItem(){
       this.item = {
-        'end' :null,
+        'end' :this.selected_time.end,
         'title': null,
         'remark': null,
-        'start': this.selected_time,
+        'start': this.selected_time.start,
         'task_id': null,
-        'is_new': true,
       };
     },
     changeValue(column, value){
@@ -120,9 +136,7 @@ export default {
   display: inline-block;
   padding: 0px;
   text-decoration: none;
-  background: #66FF99;/*ボタン色*/
   color: #FFF;
-  border-bottom: solid 4px #66CC66;
   border-radius: 3px;
 }
 
@@ -130,8 +144,26 @@ export default {
   /*ボタンを押したとき*/
   -webkit-transform: translateY(4px);
   transform: translateY(4px);/*下に動く*/
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.2);/*影を小さく*/
   border-bottom: none;
+}
+
+.save-btn {
+  background: #66FF99;/*ボタン色*/
+  border-bottom: solid 4px #66CC66;
+}
+
+.save-btn:active {
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.2);/*影を小さく*/
+}
+
+.delete-btn{
+  color: black;
+  background: white;/*ボタン色*/
+  border-bottom: solid 4px gray;
+}
+
+.delete-btn:active{
+  box-shadow: 0px 0px 1px gray;/*影を小さく*/
 }
 
 </style>

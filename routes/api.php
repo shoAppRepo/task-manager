@@ -44,7 +44,9 @@ Route::group(['middleware' => 'auth:api'], function(){
   Route::group(['namespace' => 'tsk'], function(): void {
     Route::group(['prefix' => 'task'], function(): void {
       Route::get('index', [TaskController::class, 'index']);
+      Route::post('insert', [ManhourController::class, 'insert']);
       Route::post('update', [ManhourController::class, 'update']);
+      Route::post('delete', [ManhourController::class, 'delete']);
     });
   });
 });

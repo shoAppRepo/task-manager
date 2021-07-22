@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div class="calendar">
+    <vue-loading v-if="is_loading" type="spin" color="#333" :size="{ width: '50px', height: '50px' }"></vue-loading>
+    <div v-else class="calendar">
       <FullCalendar 
         ref="cc"
         :options="calendarOptions"
@@ -8,8 +9,11 @@
 
       <modal_calendar
         v-if="modal_open"
+        :method="method"
+        :selected_item="selected_item"
         :selected_time="selected_time"
         @save="save"
+        @deleteItem="deleteItem"
         @close="closeModalCalendar"
       />
     </div>
@@ -36,7 +40,8 @@ export default {
     return {
       modal_open: false,
       is_loading: false,
-      selected_time: '',
+      selected_time: {},
+      selected_item: {},
       calendarOptions: {
         headerToolbar: {
           left: 'prev,next today',
@@ -50,15 +55,15 @@ export default {
         selectable: true,
         events:[],
         dateClick: this.createItem,
-        // eventClick: this.updateItem,
+        eventClick: this.updateByModal,
+        select: this.createItem, 
+        eventResize: this.update,
+        eventDrop: this.update, 
       },
     };
   },
   created(){
     this.init();
-  },
-  mounted(){
-    this.getSelectedMonth();
   },
   methods: {
     init(){
@@ -71,8 +76,27 @@ export default {
       });
     },
     save(item){
+      this.is_loading = true;
+      let save_url = '';
+      if(this.method === 'insert'){
+        save_url = '/api/task/insert';
+      }else{
+        save_url = '/api/task/update';
+      }
       axios
-        .post('/api/task/update', {item})
+        .post(save_url, {item})
+        .then((response) => {
+          this.calendarOptions.events = response.data.manhours;
+          this.$toasted.success('更新しました');
+          this.is_loading = false;
+          this.closeModalCalendar();
+        }).catch((error) => {
+          this.$toasted.error('更新できませんでした');
+        });
+    },
+    deleteItem(item){
+      axios
+        .post('/api/task/delete', {item})
         .then((response) => {
           this.calendarOptions.events = response.data.manhours;
           this.$toasted.success('更新しました');
@@ -81,16 +105,40 @@ export default {
           this.$toasted.error('更新できませんでした');
         });
     },
-    getSelectedMonth() {
-      let calendarApi = this.$refs.cc.getApi();
-    },
     createItem(e){
-      this.selected_time = e.dateStr;
+      this.selected_time = {
+        'start':e.startStr,
+        'end':e.endStr,
+      };
+      this.method = 'insert';
       this.openModalCalendar();
     },
-    // updateItem(e){
-    //   console.log(e);
-    // },
+    updateByModal(e){
+      this.method = 'update';
+      this.selected_item = {
+        'end' :e.event.endStr,
+        'title': e.event.title,
+        'remark': e.event.extendedProps.remark,
+        'start': e.event.startStr,
+        'task_id': e.event.extendedProps.task_id,
+        'man_hour_id': e.event.extendedProps.man_hour_id,
+      };
+
+      this.openModalCalendar();
+    },
+    update(e){
+      this.method = 'update';
+      const item = {
+        'end' :e.event.endStr,
+        'title': e.event.title,
+        'remark': e.event.extendedProps.remark,
+        'start': e.event.startStr,
+        'task_id': e.event.extendedProps.task_id,
+        'man_hour_id': e.event.extendedProps.man_hour_id,
+      };
+
+      this.save(item);
+    },
     openModalCalendar(){
       this.modal_open = true;
     },
