@@ -43,6 +43,7 @@
                     <div class="col">{{ task.task.point }}pt</div>
                   </div>
                 </div>
+                <div class="boreder-dotted-line" />
               </div>
             </div>
           </div>
@@ -350,6 +351,10 @@ export default {
 <style>
 .boreder-line{
   border: solid 1px #66CC66;
+}
+
+.boreder-dotted-line{
+  border: dotted 1px #66CC66;
 }
 
 .total-task-hour{
