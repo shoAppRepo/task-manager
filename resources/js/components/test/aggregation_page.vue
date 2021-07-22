@@ -34,11 +34,11 @@
 
               <div 
                 v-for="(task, taskIndex) in item.tasks"
-                class="task-content mb-1"
+                class="task-content mb-3"
               >
                 <div class="container">
+                  <div>{{task.task.name}}</div>
                   <div class="row">
-                    <div class="title-textarea col-sm-12 col-lg p-0">{{task.task.name}}</div>
                     <div class="total-task-hour col">{{ totalTaskHours(task.task) }}({{ showTaskDeciminalNumber(task.task) }})</div>
                     <div class="col">{{ task.task.point }}pt</div>
                   </div>
@@ -354,10 +354,6 @@ export default {
 
 .total-task-hour{
   text-align: start;
-}
-
-.title-textarea {
-  outline:none;
 }
 
 .task-content{
