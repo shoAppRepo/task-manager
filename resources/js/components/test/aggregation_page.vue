@@ -362,6 +362,6 @@ export default {
 }
 
 .task-content{
-  border-left: solid 1px #66CC66;
+  border-left: solid 3px #66CC66;
 }
 </style>
