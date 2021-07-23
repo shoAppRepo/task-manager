@@ -26,7 +26,7 @@
               </div>
             </div>
             <div class="card-body pt-0">
-              <div class="text-left mb-3">
+              <div class="text-left mb-5">
                 <div>合計作業ポイント：{{ totalPoint(item) }}pt</div>
                 <div>合計作業時間：{{ totalCategoryHours(item)}}({{ showcategoryDeciminalNumber(item) }}h)</div>
                 <div class="boreder-line" />
@@ -36,7 +36,7 @@
                 v-for="(task, taskIndex) in item.tasks"
                 class="task-content mb-3"
               >
-                <div class="container">
+                <div class="pl-1">
                   <div>{{task.task.name}}</div>
                   <div class="row">
                     <div class="total-task-hour col">{{ totalTaskHours(task.task) }}({{ showTaskDeciminalNumber(task.task) }})</div>
@@ -362,6 +362,6 @@ export default {
 }
 
 .task-content{
-  border: solid 1px #66CC66;
+  border-left: solid 3px #66CC66;
 }
 </style>
