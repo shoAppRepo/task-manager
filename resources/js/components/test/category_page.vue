@@ -18,7 +18,7 @@
         <div class="row">
           <div
           v-for="(item, itemIndex) in items"
-          class="col-sm-6 mb-4"
+          class="col-sm-4 mb-4"
         >
           <div class="card">
             <div class="card-header category-header">
