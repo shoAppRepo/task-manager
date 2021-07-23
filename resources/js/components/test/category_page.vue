@@ -34,14 +34,13 @@
             <div class="card-body pt-0">
               <div class="text-left mb-3">
                 <div>{{ countCategoryTasks(item) }}件({{ totalPoint(item) }}pt)</div>
-                <!-- <div>{{ totalCategoryHours(item)}}({{ showcategoryDeciminalNumber(item) }})</div> -->
               </div>
 
               <div 
                 v-for="(task, taskIndex) in item.tasks"
                 class="task-content mb-3"
               >
-                <div class="container">
+                <div class="container" draggable="true">
                   <div class="row">
                     <textarea type="text" class="title-textarea col p-0" :value="task.task.name" @change="changeValue('name', itemIndex, taskIndex, $event.target.value)"></textarea>
                     <div>
@@ -57,7 +56,6 @@
                       </div>
                     </div>
                   </div>
-                  <!-- <div class="total-task-hour" @click="openModalHour(itemIndex, taskIndex)">{{ totalTaskHours(task.task) }}({{ showTaskDeciminalNumber(task.task) }})</div> -->
                 </div>
               </div>
 
@@ -142,42 +140,6 @@ export default {
     selectedItems(){
       return this.items;
     },
-    totalTaskHours(){
-      return (task) => {
-        const hours = this.calcTaskHours(task);
-        const hourandminute = this.getHourAndMinute(hours);
-
-        return hourandminute['hour'] + "時間" + hourandminute['minute'] + "分";//1時間0分
-      };
-    },
-    showcategoryDeciminalNumber(){
-      return (task) => {
-        const hours = this.calcCategoryHours(task);
-        const hourandminute = this.getHourAndMinute(hours);
-        let minute = hourandminute['minute']/60;
-        //小数点移動
-        minute *= 100;
-        // 四捨五入
-        let fix_minute = Math.round(minute);
-        // 小数点を戻す
-        fix_minute /= 100;
-        return hourandminute['hour'] + fix_minute + 'h';
-      };
-    },
-    showTaskDeciminalNumber(){
-      return (task) => {
-        const hours = this.calcTaskHours(task);
-        const hourandminute = this.getHourAndMinute(hours);
-        let minute = hourandminute['minute']/60;
-        //小数点移動
-        minute *= 100;
-        // 四捨五入
-        let fix_minute = Math.round(minute);
-        // 小数点を戻す
-        fix_minute /= 100;
-        return hourandminute['hour'] + fix_minute + 'h';
-      };
-    },
     totalPoint(){
       return(item)=>{
         let total_point = 0;
@@ -189,47 +151,6 @@ export default {
         });
 
         return total_point;
-      };
-    },
-    totalCategoryHours(){
-      return (task) => {
-        const hours = this.calcCategoryHours(task);
-        const hourandminute = this.getHourAndMinute(hours);
-
-        return hourandminute['hour'] + "時間" + hourandminute['minute'] + "分";//1時間0分
-      };
-    },
-    calcCategoryHours(){
-      return(item) => {
-        let total_category_hours = 0;
-        item['tasks'].forEach((task) => {
-          const hour = this.calcTaskHours(task.task);
-          total_category_hours += hour;
-        });
-
-        return total_category_hours;
-      };
-    },
-    calcTaskHours(){
-      return(task)=>{
-        let total_task_hours = 0;
-
-        Object.keys(task.manhours).forEach((key) => {
-          const manhour = task.manhours[key];
-          const start = manhour.start;
-          const end = manhour.end;
-          if(start && end){
-            const start_date = new Date(String(start));
-            const end_date = new Date(String(end));
-            const diff_time =  (end_date - start_date);
-            
-            total_task_hours += diff_time;
-          }else {
-            total_task_hours += 0;
-          }
-        });
-
-        return total_task_hours;
       };
     },
   },
@@ -342,12 +263,6 @@ export default {
       const taskIndex = this.selected_index['task'];
       this.$set(this.items[itemIndex]['tasks'][taskIndex]['task'], 'manhours', new_items); 
       this.delete_hours = delete_hours;
-    },
-    getHourAndMinute(hours){
-      let h = Math.floor(hours / 3600000);//時間
-      let m = Math.floor((hours - h * 3600000) / 60000);//分
-
-      return{'hour' :h,'minute':m};
     },
     openModalHour(itemIndex, taskIndex){
       this.is_modal_open = true;
