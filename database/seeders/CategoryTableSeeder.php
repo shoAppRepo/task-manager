@@ -18,23 +18,27 @@ class CategoryTableSeeder extends Seeder
         'name' => '開発作業',
         'period_id' => 1,
         'user_id' => 1,
+        'sort' => 1,
       ]);
 
       DB::table('categories')->insert([
         'name' => 'バグ対応',
         'period_id' => 1,
         'user_id' => 1,
+        'sort' => 2,
       ]);
 
       DB::table('categories')->insert([
         'name' => '社内お問い合わせ',
         'period_id' => 1,
         'user_id' => 1,
+        'sort' => 5,
       ]);
 
       DB::table('categories')->insert([
         'name' => 'チームミーティング',
         'period_id' => 1,
+        'sort' => 4,
         'user_id' => 1,
       ]);
 
@@ -42,6 +46,7 @@ class CategoryTableSeeder extends Seeder
         'name' => 'その他',
         'period_id' => 1,
         'user_id' => 1,
+        'sort' => 3,
       ]);
     }
 }

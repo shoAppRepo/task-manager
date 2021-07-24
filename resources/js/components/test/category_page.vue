@@ -20,7 +20,11 @@
           v-for="(item, itemIndex) in items"
           class="col-sm-4 mb-4"
         >
-          <div class="card">
+          <div
+            :id="'drag-'+item.category_id" 
+            class="card dragItem"
+            draggable="true"
+          >
             <div class="card-header category-header">
               <div class="row">
                 <div class="col">
@@ -93,10 +97,12 @@
 
 <script>
 import modal_hour from '../parts/modal_hour';
+import drag_drop from '../mixins/drag_drop';
 import { mapState } from 'vuex';
 import { VueLoading } from 'vue-loading-template'
 
 export default {
+  mixins:[drag_drop],
   components:{
     modal_hour,
     VueLoading,
@@ -152,6 +158,10 @@ export default {
 
         return total_point;
       };
+    },
+    nextSort(){
+      const sort_length = this.items.length;
+      return sort_length + 1;
     },
   },
   methods:{
@@ -227,6 +237,7 @@ export default {
       const new_category = {
         'category_id': null,
         'name': '',
+        'sort': this.nextSort,
         'tasks': [],
         'is_new': true,
         'period_id': this.$store.state.period.selected_period,
@@ -273,8 +284,34 @@ export default {
     closeModalHour(){
       this.is_modal_open = false;
     },
-    openAccordion(){
-      // 
+    findItem(id){
+      return this.items.findIndex((item) => item.category_id === id);
+    },
+    whenDropped(drag_id, drop_id){
+      const drag_item_index = this.findItem(drag_id);
+      const drop_item_index = this.findItem(drop_id);
+      let sort_number = 0;
+      
+      // ソート番号変更
+      if(this.items[drag_item_index]['sort'] > this.items[drop_item_index]['sort']){
+        sort_number = this.items[drop_item_index]['sort'] - 0.5;
+      }else if(this.items[drop_item_index]['sort'] > this.items[drag_item_index]['sort']){
+        sort_number = this.items[drop_item_index]['sort'] + 0.5
+      }
+      this.$set(this.items[drag_item_index], 'sort' , sort_number)
+
+      // sort順に並び替え
+      this.sortItems();
+      // 全体のsort番号振り直し
+      this.sortNumbering();
+    },
+    sortItems(){
+      this.items.sort((a, b) => a.sort - b.sort);
+    },
+    sortNumbering(){
+      for(let i = 0; i < this.items.length; i++){
+        this.items[i]['sort'] = i + 1;
+      }
     },
   },
 }

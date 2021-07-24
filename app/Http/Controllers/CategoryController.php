@@ -26,7 +26,7 @@ class CategoryController extends Controller
     $items = [];
     
     // カテゴリー一覧取得
-    $categories = Category::where('user_id', $login_id)->where('period_id', $period_id)->orderby('category_id')->get();
+    $categories = Category::where('user_id', $login_id)->where('period_id', $period_id)->orderby('sort')->get();
 
     // taskを取得
     $tasks = Task::where('user_id', $login_id)->where('period_id', $period_id)->orderby('task_id')->get();
@@ -57,6 +57,7 @@ class CategoryController extends Controller
 
       $item['category_id'] = $category->category_id;
       $item['name'] = $category->name;
+      $item['sort'] = $category->sort;
       $item['tasks'] = $tasks_with_manhours;
 
       array_push($items, $item);
