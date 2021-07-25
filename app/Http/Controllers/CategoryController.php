@@ -29,10 +29,10 @@ class CategoryController extends Controller
     $categories = Category::where('user_id', $login_id)->where('period_id', $period_id)->orderby('sort')->get();
 
     // taskを取得
-    $tasks = Task::where('user_id', $login_id)->where('period_id', $period_id)->orderby('task_id')->get();
+    $tasks = Task::where('user_id', $login_id)->where('period_id', $period_id)->orderby('sort')->get();
 
     // manhours取得
-    $manhours = Manhour::where('user_id', $login_id)->orderby('man_hour_id')->get();
+    $manhours = Manhour::where('user_id', $login_id)->orderby('end')->get();
 
     // カテゴリーとtaskを紐付け
     foreach($categories as $category){

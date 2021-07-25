@@ -44,7 +44,7 @@
                 v-for="(task, taskIndex) in item.tasks"
                 class="task-content mb-3"
               >
-                <div class="container dragTask" draggable="true" :id="'drag-' + item.category_id + '-' + task.task.task_id">
+                <div class="container dragTask" draggable="true" :id="'task-' + item.category_id + '-' + task.task.task_id">
                   <div class="row">
                     <textarea type="text" class="title-textarea col p-0" :value="task.task.name" @change="changeValue('name', itemIndex, taskIndex, $event.target.value)"></textarea>
                     <div>

@@ -40,7 +40,9 @@ export default {
       const drag_elemet_id = e.dataTransfer.getData('dragItem');
       const drop_element_id = regain(e.target).id;
 
-      this.whenDropped(drag_elemet_id, drop_element_id);
+      if(!drag_elemet_id.includes('task')){
+        this.whenDropped(drag_elemet_id, drop_element_id);
+      }
     },
     afterUpdatedForTask(){
       // dragTaskをclassにもつelementを取得
@@ -72,7 +74,9 @@ export default {
       const drag_elemet_id = e.dataTransfer.getData('dragTask');
       const drop_element_id = regain(e.target).id;
 
-      this.whenTaskDropped(drag_elemet_id, drop_element_id);
+      if(drag_elemet_id.includes('task')){
+        this.whenTaskDropped(drag_elemet_id, drop_element_id);
+      }
     },
   },
 }
