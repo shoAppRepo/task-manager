@@ -44,7 +44,7 @@
                 v-for="(task, taskIndex) in item.tasks"
                 class="task-content mb-3"
               >
-                <div class="container" draggable="true">
+                <div class="container dragTask" draggable="true" :id="'drag-' + item.category_id + '-' + task.task.task_id">
                   <div class="row">
                     <textarea type="text" class="title-textarea col p-0" :value="task.task.name" @change="changeValue('name', itemIndex, taskIndex, $event.target.value)"></textarea>
                     <div>
@@ -284,26 +284,33 @@ export default {
     closeModalHour(){
       this.is_modal_open = false;
     },
-    findItem(id){
+    findCategryIndex(id){
       return this.items.findIndex((item) => item.category_id === id);
     },
-    whenDropped(drag_id, drop_id){
-      const drag_item_index = this.findItem(drag_id);
-      const drop_item_index = this.findItem(drop_id);
-      let sort_number = 0;
-      
-      // ソート番号変更
-      if(this.items[drag_item_index]['sort'] > this.items[drop_item_index]['sort']){
-        sort_number = this.items[drop_item_index]['sort'] - 0.5;
-      }else if(this.items[drop_item_index]['sort'] > this.items[drag_item_index]['sort']){
-        sort_number = this.items[drop_item_index]['sort'] + 0.5
-      }
-      this.$set(this.items[drag_item_index], 'sort' , sort_number)
+    whenDropped(drag_elemet_id, drop_element_id){
+      const drag_element = document.querySelector('#' + drag_elemet_id);
+      const drop_element = document.querySelector('#' + drop_element_id);
 
-      // sort順に並び替え
-      this.sortItems();
-      // 全体のsort番号振り直し
-      this.sortNumbering();
+      if(drag_element.className === drop_element.className){
+        const drag_id = Number(drag_elemet_id.split('-')[1]);
+        const drop_id = Number(drop_element_id.split('-')[1]);
+        const drag_item_index = this.findCategryIndex(drag_id);
+        const drop_item_index = this.findCategryIndex(drop_id);
+        let sort_number = 0;
+        // ソート番号変更
+        if(this.items[drag_item_index]['sort'] > this.items[drop_item_index]['sort']){
+          sort_number = this.items[drop_item_index]['sort'] - 0.5;
+        }else if(this.items[drop_item_index]['sort'] > this.items[drag_item_index]['sort']){
+          sort_number = this.items[drop_item_index]['sort'] + 0.5
+        }
+        this.$set(this.items[drag_item_index], 'sort' , sort_number)
+  
+        // sort順に並び替え
+        this.sortItems();
+        // 全体のsort番号振り直し
+        this.sortNumbering();
+      }
+      
     },
     sortItems(){
       this.items.sort((a, b) => a.sort - b.sort);
@@ -311,6 +318,52 @@ export default {
     sortNumbering(){
       for(let i = 0; i < this.items.length; i++){
         this.items[i]['sort'] = i + 1;
+      }
+    },
+    findTask(category_index, task_id){
+      return this.items[category_index]['tasks'].findIndex((task) => task.task.task_id === task_id);
+    },
+    sortTask(category_index){
+      this.items[category_index]['tasks'].sort((a, b) => a.task.sort - b.task.sort);
+    },
+    taskSortNumbering(category_index){
+      for(let i = 0; i < this.items[category_index]['tasks'].length; i++){
+        this.items[category_index]['tasks'][i]['task']['sort'] = i + 1;
+      }
+    },
+    whenTaskDropped(drag_elemet_id, drop_element_id){
+      const drag_element = document.querySelector('#' + drag_elemet_id);
+      const drop_element = document.querySelector('#' + drop_element_id);
+
+      if(drag_element.className === drop_element.className){
+        const drag_category_id = Number(drag_elemet_id.split('-')[1]);
+        const drop_category_id = Number(drop_element_id.split('-')[1]);
+        const drag_category_item = this.findCategryIndex(drag_category_id);
+        const drop_category_item = this.findCategryIndex(drop_category_id);
+        const drag_id = Number(drag_elemet_id.split('-')[2]);
+        const drop_id = Number(drop_element_id.split('-')[2]);
+        let drag_task = this.findTask(drag_category_item, drag_id);
+        const drop_task = this.findTask(drop_category_item, drop_id);
+
+        // 異なるカテゴリーにドロップされた場合、移動元から削除し移動先に追加
+        if(drag_category_id !== drop_category_id){
+          this.items[drag_category_item]['tasks'][drag_task]['task']['category_id'] = drop_category_id;
+          this.items[drop_category_item]['tasks'].push(this.items[drag_category_item]['tasks'][drag_task]);
+          this.$delete(this.items[drag_category_item]['tasks'], drag_task);
+          drag_task = this.items[drop_category_item]['tasks'].length - 1;
+        }
+
+        // sort番号セット
+        if(this.items[drop_category_item]['tasks'][drag_task]['task']['sort'] > this.items[drop_category_item]['tasks'][drop_task]['task']['sort']){
+          this.items[drop_category_item]['tasks'][drag_task]['task']['sort'] = this.items[drop_category_item]['tasks'][drop_task]['task']['sort'] - 0.5;
+        }else if(this.items[drop_category_item]['tasks'][drag_task]['task']['sort'] < this.items[drop_category_item]['tasks'][drop_task]['task']['sort']){
+          this.items[drop_category_item]['tasks'][drag_task]['task']['sort'] = this.items[drop_category_item]['tasks'][drop_task]['task']['sort'] + 0.5;
+        }
+
+        // タスクのcategory_idからカテゴリーのitemを取得し、その中のtasksの順番を変更
+        this.sortTask(drop_category_item);
+        // sort番号振り直し　
+        this.taskSortNumbering(drop_category_item);
       }
     },
   },

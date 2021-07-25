@@ -19,6 +19,7 @@ class TasksTableSeeder extends Seeder
         'period_id' => 1,
         'name' => '個人月間画面作成',
         'user_id' => 1,
+        'sort' => 1,
       ]);
 
       DB::table('tasks')->insert([
@@ -26,6 +27,7 @@ class TasksTableSeeder extends Seeder
         'period_id' => 1,
         'name' => '予定追加画面',
         'user_id' => 1,
+        'sort' => 2,
       ]);
 
       DB::table('tasks')->insert([
@@ -33,6 +35,7 @@ class TasksTableSeeder extends Seeder
         'period_id' => 1,
         'name' => 'バグ対応1',
         'user_id' => 1,
+        'sort' => 1,
       ]);
 
       DB::table('tasks')->insert([
@@ -40,6 +43,7 @@ class TasksTableSeeder extends Seeder
         'period_id' => 1,
         'name' => 'バグ対応2',
         'user_id' => 1,
+        'sort' => 2,
       ]);
 
       DB::table('tasks')->insert([
@@ -47,6 +51,7 @@ class TasksTableSeeder extends Seeder
         'period_id' => 1,
         'name' => 'デイリースクラム',
         'user_id' => 1,
+        'sort' => 1,
       ]);
 
       DB::table('tasks')->insert([
@@ -54,6 +59,7 @@ class TasksTableSeeder extends Seeder
         'period_id' => 1,
         'name' => 'スプリントレビュー',
         'user_id' => 1,
+        'sort' => 2,
       ]);
 
       DB::table('tasks')->insert([
@@ -61,6 +67,7 @@ class TasksTableSeeder extends Seeder
         'period_id' => 1,
         'name' => 'その他1',
         'user_id' => 1,
+        'sort' => 1,
       ]);
 
       DB::table('tasks')->insert([
@@ -68,6 +75,7 @@ class TasksTableSeeder extends Seeder
         'period_id' => 1,
         'name' => 'その他2',
         'user_id' => 1,
+        'sort' => 2,
       ]);
     }
 }
