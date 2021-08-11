@@ -13,6 +13,9 @@ import period_page from './components/period_page.vue';
 import aggregation_page_route from './routes/aggregation_page';
 import aggregation_page from './components/aggregation_page.vue';
 
+import todo_page_route from './routes/todo_page';
+import todo_page from './components/todo_page.vue';
+
 
 Vue.use(VueRouter);
 
@@ -38,6 +41,11 @@ const router = new VueRouter({
       path: '/aggregation',
       component: aggregation_page,
       children: aggregation_page_route,
+    },
+    {
+      path: '/todo',
+      component: todo_page,
+      children: todo_page_route,
     },
   ],
 });

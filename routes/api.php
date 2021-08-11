@@ -6,6 +6,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PeriodController;
 use App\Http\Controllers\ManhourController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\LineBotController;
+use App\Http\Controllers\todoController;
 
 
 /*
@@ -49,4 +51,16 @@ Route::group(['middleware' => 'auth:api'], function(){
       Route::post('delete', [ManhourController::class, 'delete']);
     });
   });
+
+  Route::group(['namespace' => 'todo'], function(): void { 
+    Route::group(['prefix' => 'todo'], function(): void {
+      Route::get('index', [todoController::class, 'index']);
+      Route::post('update', [todoController::class, 'update']);
+    });
+  });
+
+});
+
+Route::group(['namespace' => 'line'], function(): void {
+  Route::post('/lineCrud', [LineBotController::class, 'lineCrud']);
 });

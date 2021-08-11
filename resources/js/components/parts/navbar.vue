@@ -16,6 +16,9 @@
         <li class="nav-item">
           <a class="nav-link white-font" href="/calendar">カレンダー</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link white-font" href="/todo">ToDoリスト</a>
+        </li>
         <li>
           <a class="nav-link white-font" href="/aggregation">集計画面</a>
         </li>

@@ -17,7 +17,9 @@ class DatabaseSeeder extends Seeder
         UsersTableSeeder::class,
         PeriodsTableSeeder::class,
         CategoryTableSeeder::class,
+        TodoCategoryTableSeeder::class,
         TasksTableSeeder::class,
+        TodoTasksTableSeeder::class,
         manhoursTableSeed::class,
       ]);
     }
