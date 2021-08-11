@@ -60,7 +60,7 @@ class todoController extends Controller
       if(array_key_exists('is_new', $item)){
         unset($copy_item['is_new'], $copy_item['category_id']);
         $copy_item['user_id'] = $login_id;
-        $inserted_category = Category::create($copy_item);
+        $inserted_category = TodoCategory::create($copy_item);
         $category_id = $inserted_category->category_id;
       }else{
         TodoCategory::where('user_id', $login_id)->where('category_id', $category_id)->update($copy_item);
