@@ -41,27 +41,20 @@ class LineBotController extends Controller
         // $replyText = $this->getExplanation();
       }
 
-      $text_array = explode(',', $text);
-      $purpose = $text_array[0];
-  
       // 紐づけ
-      if($purpose === '紐づけ'){
-        if(count($text_array) !== 2){
-          $replyText = '情報に不備があります。';
-        }else{
-          $email = $text_array[1];
-          $replyText = $this->lintToAccount($email);
-        }
-
+      if($text === '紐づけ'){
+        $this->linkToAccount();
       }
       // 登録
+
+      // 更新
       
 
       $lineBot->replyText($replyToken, $replyText);
     }
   }
 
-  public function lintToAccount(string $email)
+  public function linkToAccount(string $email)
   {
     $user = User::where('email', $email)->first();
 

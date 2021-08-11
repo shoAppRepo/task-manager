@@ -47,6 +47,11 @@
                           <span class="far fa-trash-alt ml-2" @click="deleteTask(itemIndex, taskIndex)"/>
                         </button>
                       </div>
+                      <div>
+                        <button class="btn block">
+                          <span class="fas fa-pencil-alt ml-2" @click="openModalToDo(itemIndex, taskIndex)"/>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -73,10 +78,19 @@
 
       </div>
     </div>
+
+    <modal_toDo 
+      v-if="is_modal_open"
+      :selected_task="selected_task"
+      @confirm="confirm($event)"
+      @close="closeModalToDo()"
+    />
+
   </div>
 </template>
 
 <script>
+import modal_toDo from '../parts/modal_toDo';
 import drag_drop from '../mixins/drag_drop';
 import { mapState } from 'vuex';
 import { VueLoading } from 'vue-loading-template'
@@ -84,11 +98,15 @@ import { VueLoading } from 'vue-loading-template'
 export default {
   mixins:[drag_drop],
   components:{
+    modal_toDo,
     VueLoading,
   },
   data(){
     return {
       is_loading: false,
+      is_modal_open: false,
+      selected_index: {},
+      selected_task: {},
       items: {},
       task: {},
       delete_categories: [],
@@ -182,6 +200,19 @@ export default {
     changeCategoryName(itemIndex, value){
       this.$set(this.items[itemIndex], 'name', value);
     },
+    confirm(item){
+      const itemIndex = this.selected_index['item'];
+      const taskIndex = this.selected_index['task'];
+      this.$set(this.items[itemIndex]['tasks'], taskIndex, item); 
+    },
+    openModalToDo(itemIndex, taskIndex){
+      this.is_modal_open = true;
+      this.selected_index = {'item':itemIndex, 'task': taskIndex};
+      this.selected_task = this.items[itemIndex]['tasks'][taskIndex];
+    },
+    closeModalToDo(){
+      this.is_modal_open = false;
+    },
     findCategryIndex(id){
       return this.items.findIndex((item) => item.category_id === id);
     },
@@ -222,11 +253,11 @@ export default {
       return this.items[category_index]['tasks'].findIndex((task) => task.task_id === task_id);
     },
     sortTask(category_index){
-      this.items[category_index]['tasks'].sort((a, b) => a.task.sort - b.task.sort);
+      this.items[category_index]['tasks'].sort((a, b) => a.sort - b.sort);
     },
     taskSortNumbering(category_index){
       for(let i = 0; i < this.items[category_index]['tasks'].length; i++){
-        this.items[category_index]['tasks'][i]['task']['sort'] = i + 1;
+        this.items[category_index]['tasks'][i]['sort'] = i + 1;
       }
     },
     whenTaskDropped(drag_elemet_id, drop_element_id){
@@ -252,10 +283,10 @@ export default {
         }
 
         // sort番号セット
-        if(this.items[drop_category_item]['tasks'][drag_task]['task']['sort'] > this.items[drop_category_item]['tasks'][drop_task]['task']['sort']){
-          this.items[drop_category_item]['tasks'][drag_task]['task']['sort'] = this.items[drop_category_item]['tasks'][drop_task]['task']['sort'] - 0.5;
-        }else if(this.items[drop_category_item]['tasks'][drag_task]['task']['sort'] < this.items[drop_category_item]['tasks'][drop_task]['task']['sort']){
-          this.items[drop_category_item]['tasks'][drag_task]['task']['sort'] = this.items[drop_category_item]['tasks'][drop_task]['task']['sort'] + 0.5;
+        if(this.items[drop_category_item]['tasks'][drag_task]['sort'] > this.items[drop_category_item]['tasks'][drop_task]['sort']){
+          this.items[drop_category_item]['tasks'][drag_task]['sort'] = this.items[drop_category_item]['tasks'][drop_task]['sort'] - 0.5;
+        }else if(this.items[drop_category_item]['tasks'][drag_task]['sort'] < this.items[drop_category_item]['tasks'][drop_task]['sort']){
+          this.items[drop_category_item]['tasks'][drag_task]['sort'] = this.items[drop_category_item]['tasks'][drop_task]['sort'] + 0.5;
         }
 
         // タスクのcategory_idからカテゴリーのitemを取得し、その中のtasksの順番を変更
