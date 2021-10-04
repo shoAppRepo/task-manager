@@ -149,7 +149,8 @@ export default {
     periodGoalPoint() {
       const period_id= this.$store.state.period.selected_period;
       const selected_period = this.periods.find((period) => period.period_id === period_id);
-      return selected_period['goal_point'];
+      console.log(selected_period, period_id);
+      // return selected_period['goal_point'];
     },
     selectedItems(){
       return this.items;
