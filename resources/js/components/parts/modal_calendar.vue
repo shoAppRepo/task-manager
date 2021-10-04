@@ -12,7 +12,7 @@
           </div>
           <div class="text-center mb-2">
             タスク：
-            <select v-model="item.task_id" @change="changeValue('task_id', $event.target.value)">
+            <select v-model="selectedTask" >
               <option disabled value="">タスクを選択してください</option>
               <option v-for="task in periods_tasks" :value="task.task_id">{{ task.name }}</option>
             </select>
@@ -90,6 +90,10 @@ export default {
     periods_tasks() {
       return this.tasks.filter(task => task.period_id === this.selectedPeriod);
     },
+    selectedTask: {
+      get () { return this.item.task_id },
+      set (val) { this.changeValue(val) },
+    },
   },
   methods:{
     init(){
@@ -112,7 +116,7 @@ export default {
     changeValue(column, value){
       if(column === 'task_id'){
         this.$set(this.item, column, Number(value));
-        const task = this.tasks.find((task) => task.task_id === Number(value));
+        const task = this.periods_tasks.find((task) => task.task_id === Number(value));
         this.$set(this.item, 'title', task.name);
       }
     },
