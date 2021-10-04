@@ -1,7 +1,7 @@
 <template>
   <transition name="modal" appear >
     <div class="modal modal-overlay" @click.self="$emit('close')">
-      <div class="modal-content">
+      <div class="modal-window">
         <div class="mx-auto mb-2">
           <div class="text-center mb-2">
             期間：
@@ -126,21 +126,27 @@ export default {
   align-items: center;
   justify-content: center;
   position: fixed;
-  z-index: 1;
+  z-index: 5000;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.modal-window {
+  z-index: 10000;
+  margin: 1.5em auto 0;
+  padding: 10px 20px;
+  border: 2px solid #aaa;
+  background: #fff;
+  max-height: 90%;
+  position: relative;
+  overflow-y: auto;
 }
 
 .modal-content {
-  width:85%;
-  z-index: 3;
-  padding: 40px 50px;
-  background:#fff;
-  overflow: hidden;
-  border-radius: 4px;
+  padding: 10px 20px;
 }
 
 /* オーバーレイのトランジション */
