@@ -4,10 +4,17 @@
       <div class="modal-content">
         <div class="mx-auto mb-2">
           <div class="text-center mb-2">
+            期間：
+            <select v-model="selectedPeriod">
+              <option disabled value=null>期間を選択してください</option>
+              <option v-for="period in periods" :value="period.period_id" >{{ periodName(period) }}</option>
+            </select>
+          </div>
+          <div class="text-center mb-2">
             タスク：
             <select v-model="item.task_id" @change="changeValue('task_id', $event.target.value)">
               <option disabled value="">タスクを選択してください</option>
-              <option v-for="task in tasks" :value="task.task_id">{{ task.name }}</option>
+              <option v-for="task in periods_tasks" :value="task.task_id">{{ task.name }}</option>
             </select>
           </div>
 
@@ -50,6 +57,7 @@ export default {
     return {
       item: {},
       tasks: [],
+      periods: {},
     };
   },
   props:{
@@ -66,12 +74,30 @@ export default {
       this.item = { ...this.selected_item};
     }
   },
+  computed: {
+    selectedPeriod: {
+      get () { return this.$store.state.period.selected_period },
+      set (val) { this.$store.commit('period/setSelectedPeriod', val) },
+    },
+    periodName(){
+      return(period) => {
+        const start = new Date(period.start).toLocaleDateString();
+        const end = new Date(period.end).toLocaleDateString();
+        const date = start + "~" + end;
+        return date;
+      };
+    },
+    periods_tasks() {
+      return this.tasks.filter(task => task.period_id === this.selectedPeriod);
+    },
+  },
   methods:{
     init(){
       axios
         .get('/api/task/index')
         .then((response) => {
           this.tasks = response.data.tasks;
+          this.periods = response.data.periods.periods;
       });
     },
     makeItem(){
