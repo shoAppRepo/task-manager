@@ -9,6 +9,9 @@
               <option disabled value=null>期間を選択してください</option>
               <option v-for="period in periods" :value="period.period_id" >{{ periodName(period) }}</option>
             </select>
+            <div>
+              <p>目標ポイント：{{ periodGoalPoint }}pt</p>
+            </div>
           </div>
           <!-- 保存 -->
           <button v-if="$store.state.period.selected_period" class="bottom-icon btn col-md-1 col-2" @click="save">
@@ -17,9 +20,9 @@
         </div>
         <div class="row">
           <div
-          v-for="(item, itemIndex) in items"
-          class="col-sm-4 mb-4"
-        >
+            v-for="(item, itemIndex) in items"
+            class="col-sm-4 mb-4"
+          >
           <div
             :id="'drag-'+item.category_id" 
             class="card dragItem"
@@ -142,6 +145,11 @@ export default {
         const date = start + "~" + end;
         return date;
       };
+    },
+    periodGoalPoint() {
+      const period_id= this.$store.state.period.selected_period;
+      const selected_period = this.periods.find((period) => period.period_id === period_id);
+      return selected_period['goal_point'];
     },
     selectedItems(){
       return this.items;

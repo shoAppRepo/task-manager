@@ -11,6 +11,8 @@
             </select>
           </div>
           <div>合計作業時間：{{allCategoryHours}}({{allDiciminalCategoryHour}}h)</div>
+          <div>合計作業ポイント：{{ allTotalPoint }}pt({{ pointDiff }})</div>
+          <div>目標ポイント：{{ periodGoalPoint }}</div>
         </div>
         <div class="row">
           <div
@@ -101,6 +103,30 @@ export default {
         const date = start + "~" + end;
         return date;
       };
+    },
+    periodGoalPoint() {
+      const period_id= this.$store.state.period.selected_period;
+      const selected_period = this.periods.find((period) => period.period_id === period_id);
+      return selected_period['goal_point'];
+    },
+    allTotalPoint() {
+      let total_point = 0;
+
+      this.items.forEach((item) => {
+        total_point += this.totalPoint(item);
+      });
+
+      return total_point;
+    },
+    pointDiff() {
+      let diff = this.allTotalPoint - this.periodGoalPoint;
+      if(diff > 0){
+        diff = "+" + diff;
+      }else if(diff === 0){
+        diff = "±" + diff;
+      }
+
+      return diff;
     },
     selectedItems(){
       return this.items;

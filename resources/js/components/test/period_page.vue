@@ -16,6 +16,9 @@
             ~
             <datetime type="date" v-model="period.end" />
           </div>
+          <div>
+            <input type="number" v-model="period.goal_point" />pt
+          </div>
           <button class="btn block p-0">
             <span class="far fa-trash-alt" @click="deletePeriod(index)"/>
           </button>
