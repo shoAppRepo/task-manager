@@ -276,7 +276,7 @@ export default {
 
         // 異なるカテゴリーにドロップされた場合、移動元から削除し移動先に追加
         if(drag_category_id !== drop_category_id){
-          this.items[drag_category_item]['tasks'][drag_task]['task']['category_id'] = drop_category_id;
+          this.items[drag_category_item]['tasks'][drag_task]['category_id'] = drop_category_id;
           this.items[drop_category_item]['tasks'].push(this.items[drag_category_item]['tasks'][drag_task]);
           this.$delete(this.items[drag_category_item]['tasks'], drag_task);
           drag_task = this.items[drop_category_item]['tasks'].length - 1;
