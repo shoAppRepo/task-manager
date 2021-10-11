@@ -44,4 +44,19 @@ class ManhourController extends Controller
 
     return $this->index();
   }
+
+  public function start(Request $request)
+  {
+    $item = $request->input('item');
+
+    $item['user_id'] = \Auth::id();
+    return Manhour::create($item);
+  }
+
+  public function stop(Request $request)
+  {
+    $item = $request->input('item');
+
+    return Manhour::where('man_hour_id', '=', $item['man_hour_id'])->update($item);
+  }
 }

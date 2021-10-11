@@ -49,6 +49,10 @@
               >
                 <div class="container dragTask" draggable="true" :id="'task-' + item.category_id + '-' + task.task.task_id">
                   <div class="row">
+                    <div class="time-button d-flex align-items-center" >
+                      <button v-if="showStartButton(task.task.task_id)" class="btn block fas fa-play-circle fa-2x" @click="startTask(itemIndex, taskIndex, task.task)" :disabled="canStart(task.task.task_id)"/>
+                      <button v-else class="btn block fas fa-stop-circle fa-2x" @click="stopTask(itemIndex, taskIndex, task.task)"/>
+                    </div>
                     <textarea type="text" class="title-textarea col p-0" :value="task.task.name" @change="changeValue('name', itemIndex, taskIndex, $event.target.value)"></textarea>
                     <div>
                       <div>
@@ -103,6 +107,7 @@ import modal_hour from '../parts/modal_hour';
 import drag_drop from '../mixins/drag_drop';
 import { mapState } from 'vuex';
 import { VueLoading } from 'vue-loading-template'
+import moment from "moment";
 
 export default {
   mixins:[drag_drop],
@@ -119,6 +124,7 @@ export default {
       items: {},
       periods: {},
       task: {},
+      is_started: {itemIndex: null, taskIndex: null,task_id: null, man_hour_id: null},
       delete_categories: [],
       delete_tasks: [],
       delete_hours: [],
@@ -174,6 +180,20 @@ export default {
     nextSort(){
       const sort_length = this.items.length;
       return sort_length + 1;
+    },
+    showStartButton() {
+      return(task_id) => {
+        if(this.is_started.task_id){
+          return this.is_started.task_id !== task_id;
+        }
+
+        return true;
+      };
+    },
+    canStart() {
+      return(task_id) => {
+        return this.is_started.task_id && task_id !== this.is_started.task_id;
+      };
     },
   },
   methods:{
@@ -263,6 +283,10 @@ export default {
         this.delete_categories.push(item);
       }
 
+      if(itemIndex === this.is_started.itemIndex){
+        this.resetIsStarted();
+      }
+
       this.$delete(this.items, itemIndex);
     },
     deleteTask(itemIndex, taskIndex){
@@ -271,6 +295,9 @@ export default {
         this.delete_tasks.push(item);
       }
 
+      if(itemIndex === this.is_started.itemIndex && taskIndex === this.is_started.taskIndex){
+        this.resetIsStarted();
+      }
       this.$delete(this.items[itemIndex]['tasks'], taskIndex);
     },
     changeValue(column, itemIndex, taskIndex, value){
@@ -279,6 +306,54 @@ export default {
     changeCategoryName(itemIndex, value){
       this.$set(this.items[itemIndex], 'name', value);
     },
+    now(){
+      return moment().format();
+    },
+    startTask(itemIndex, taskIndex, task) {
+      const item = {
+        'end' :null,
+        'title': task.name,
+        'remark': null,
+        'start': this.now(),
+        'task_id': task.task_id,
+        'is_new': true,
+      };
+
+      axios
+        .post('/api/task/start', {item:item})
+        .then((response) => {
+          this.$toasted.success('更新しました');
+          const inserted_item = response.data;
+          this.items[itemIndex]['tasks'][taskIndex]['task']['manhours'].push(inserted_item);
+          this.is_started = {
+            itemIndex: itemIndex,
+            taskIndex: taskIndex,
+            task_id: task.task_id,
+            man_hour_id: inserted_item.man_hour_id,
+          };
+        }).catch((error) => {
+          this.$toasted.error('開始できませんでした');
+        });
+    },
+    stopTask(itemIndex, taskIndex, task) {
+      if(!(itemIndex === this.is_started.itemIndex & taskIndex === this.is_started.taskIndex)){
+        this.resetIsStarted();
+        return;
+      }
+
+      const item = this.items[itemIndex]['tasks'][taskIndex]['task']['manhours'].find((manhour) => manhour.man_hour_id === this.is_started.man_hour_id);
+      if(item){
+        item.end = this.now();
+        axios
+        .post('/api/task/stop', {item:item})
+        .then((response) => {
+          this.$toasted.success('終了しました');
+          this.resetIsStarted();
+        }).catch((error) => {
+          this.$toasted.error('開始できませんでした');
+        });
+      }
+    },
     confirm(info){
       const new_items = info.items;
       const delete_hours = info.delete_hours;
@@ -286,6 +361,11 @@ export default {
       const taskIndex = this.selected_index['task'];
       this.$set(this.items[itemIndex]['tasks'][taskIndex]['task'], 'manhours', new_items); 
       this.delete_hours = delete_hours;
+
+      const is_deleted = delete_hours.find((hour) => hour.man_hour_id === this.is_started.man_hour_id);
+      if(is_deleted){
+        this.resetIsStarted();
+      }
     },
     openModalHour(itemIndex, taskIndex){
       this.is_modal_open = true;
@@ -378,6 +458,14 @@ export default {
         this.taskSortNumbering(drop_category_item);
       }
     },
+    resetIsStarted(){
+      this.is_started = {
+        itemIndex: null,
+        taskIndex: null,
+        task_id: null,
+        man_hour_id: null
+      };
+    },
   },
 }
 </script>
@@ -413,5 +501,10 @@ export default {
 
 .task-content{
   border-radius: 5%;
+}
+
+.time-button {
+  margin: 0px;
+  padding: 0px;
 }
 </style>

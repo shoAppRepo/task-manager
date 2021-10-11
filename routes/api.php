@@ -49,6 +49,8 @@ Route::group(['middleware' => 'auth:api'], function(){
       Route::post('insert', [ManhourController::class, 'insert']);
       Route::post('update', [ManhourController::class, 'update']);
       Route::post('delete', [ManhourController::class, 'delete']);
+      Route::post('start', [ManhourController::class, 'start']);
+      Route::post('stop', [ManhourController::class, 'stop']);
     });
   });
 
