@@ -57,6 +57,6 @@ class ManhourController extends Controller
   {
     $item = $request->input('item');
 
-    return Manhour::where('man_hour_id', '=', $item['man_hour_id'])->update($item);
+    Manhour::where('man_hour_id', '=', $item['man_hour_id'])->update($item);
   }
 }
