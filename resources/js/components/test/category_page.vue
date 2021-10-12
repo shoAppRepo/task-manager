@@ -14,7 +14,7 @@
             </div>
           </div>
           <!-- 保存 -->
-          <button v-if="$store.state.period.selected_period" class="bottom-icon btn col-md-1 col-2" @click="save">
+          <button v-if="getSelectedPeriod()" class="bottom-icon btn col-md-1 col-2" @click="save">
             保存
           </button>
         </div>
@@ -124,7 +124,6 @@ export default {
       items: {},
       periods: {},
       task: {},
-      is_started: {itemIndex: null, taskIndex: null,task_id: null, man_hour_id: null},
       delete_categories: [],
       delete_tasks: [],
       delete_hours: [],
@@ -136,12 +135,13 @@ export default {
   computed:{
     ...mapState({
       selected_period: (state) => state.period.selected_period,
+      is_started: (state) => state.start.is_started
     }),
     selected(){
       return (this.items.length > 0)? true: false;
     },
     selectedPeriod: {
-      get () { return this.$store.state.period.selected_period },
+      get () { return this.getSelectedPeriod() },
       set (val) { this.$store.commit('period/setSelectedPeriod', val) },
     },
     periodName(){
@@ -153,7 +153,7 @@ export default {
       };
     },
     periodGoalPoint() {
-      const period_id= this.$store.state.period.selected_period;
+      const period_id= this.getSelectedPeriod();
       if(period_id == null){
         return null;
       }else {
@@ -183,8 +183,8 @@ export default {
     },
     showStartButton() {
       return(task_id) => {
-        if(this.is_started.task_id){
-          return this.is_started.task_id !== task_id;
+        if(this.isStarted.task_id){
+          return this.isStarted.task_id !== task_id;
         }
 
         return true;
@@ -192,16 +192,19 @@ export default {
     },
     canStart() {
       return(task_id) => {
-        return this.is_started.task_id && task_id !== this.is_started.task_id;
+        return this.isStarted.task_id && task_id !== this.isStarted.task_id;
       };
+    },
+    isStarted() {
+      return this.$store.state.start.is_started;
     },
   },
   methods:{
     init(){
       this.is_loading = true;
       let period_id = null;
-      if(this.$store.state.period.selected_period){
-        period_id = this.$store.state.period.selected_period;
+      if(this.getSelectedPeriod()){
+        period_id = this.getSelectedPeriod();
       }
 
       axios
@@ -216,7 +219,7 @@ export default {
     save(){
       this.is_loading = true;
       const items = this.items;
-      const period_id = this.$store.state.period.selected_period;
+      const period_id = this.getSelectedPeriod();
       const delete_tasks = this.delete_tasks;
       const delete_hours = this.delete_hours;
       const delete_categories = this.delete_categories;
@@ -235,9 +238,12 @@ export default {
           this.$toasted.error('更新出来ませんでした');
       });
     },
+    getSelectedPeriod() {
+      return this.$store.state.period.selected_period;
+    },
     getItems(){
       this.is_loading = true;
-      const period_id = this.$store.state.period.selected_period;
+      const period_id = this.getSelectedPeriod();
 
       axios
         .get('/api/category/'+ period_id + '/index')
@@ -257,7 +263,7 @@ export default {
           'name': '',
           'manhours': [],
           'is_new': true,
-          'period_id': this.$store.state.period.selected_period,
+          'period_id': this.getSelectedPeriod(),
           'task_id': null,
           'point': null,
         }
@@ -272,7 +278,7 @@ export default {
         'sort': this.nextSort,
         'tasks': [],
         'is_new': true,
-        'period_id': this.$store.state.period.selected_period,
+        'period_id': this.getSelectedPeriod(),
       };
 
       this.items.push(new_category);
@@ -283,7 +289,7 @@ export default {
         this.delete_categories.push(item);
       }
 
-      if(itemIndex === this.is_started.itemIndex){
+      if(itemIndex === this.isStarted.itemIndex){
         this.resetIsStarted();
       }
 
@@ -295,7 +301,7 @@ export default {
         this.delete_tasks.push(item);
       }
 
-      if(itemIndex === this.is_started.itemIndex && taskIndex === this.is_started.taskIndex){
+      if(itemIndex === this.isStarted.itemIndex && taskIndex === this.isStarted.taskIndex){
         this.resetIsStarted();
       }
       this.$delete(this.items[itemIndex]['tasks'], taskIndex);
@@ -322,26 +328,27 @@ export default {
       axios
         .post('/api/task/start', {item:item})
         .then((response) => {
-          this.$toasted.success('更新しました');
+          this.$toasted.success('開始しました');
           const inserted_item = response.data;
           this.items[itemIndex]['tasks'][taskIndex]['task']['manhours'].push(inserted_item);
-          this.is_started = {
+          const is_started = {
             itemIndex: itemIndex,
             taskIndex: taskIndex,
             task_id: task.task_id,
             man_hour_id: inserted_item.man_hour_id,
           };
+          this.$store.commit('start/setIsStarted', is_started);
         }).catch((error) => {
           this.$toasted.error('開始できませんでした');
         });
     },
     stopTask(itemIndex, taskIndex, task) {
-      if(!(itemIndex === this.is_started.itemIndex & taskIndex === this.is_started.taskIndex)){
+      if(!(itemIndex === this.isStarted.itemIndex & taskIndex === this.isStarted.taskIndex)){
         this.resetIsStarted();
         return;
       }
 
-      const item = this.items[itemIndex]['tasks'][taskIndex]['task']['manhours'].find((manhour) => manhour.man_hour_id === this.is_started.man_hour_id);
+      const item = this.items[itemIndex]['tasks'][taskIndex]['task']['manhours'].find((manhour) => manhour.man_hour_id === this.isStarted.man_hour_id);
       if(item){
         item.end = this.now();
         axios
@@ -350,7 +357,8 @@ export default {
           this.$toasted.success('終了しました');
           this.resetIsStarted();
         }).catch((error) => {
-          this.$toasted.error('開始できませんでした');
+          console.log(error);
+          this.$toasted.error('終了できませんでした');
         });
       }
     },
@@ -362,7 +370,7 @@ export default {
       this.$set(this.items[itemIndex]['tasks'][taskIndex]['task'], 'manhours', new_items); 
       this.delete_hours = delete_hours;
 
-      const is_deleted = delete_hours.find((hour) => hour.man_hour_id === this.is_started.man_hour_id);
+      const is_deleted = delete_hours.find((hour) => hour.man_hour_id === this.isStarted.man_hour_id);
       if(is_deleted){
         this.resetIsStarted();
       }
@@ -459,12 +467,14 @@ export default {
       }
     },
     resetIsStarted(){
-      this.is_started = {
+      const is_started = {
         itemIndex: null,
         taskIndex: null,
         task_id: null,
         man_hour_id: null
       };
+
+      this.$store.commit('start/setIsStarted', is_started);
     },
   },
 }
