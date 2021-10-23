@@ -56,9 +56,9 @@
                         {{task.task.name}}
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>{{ totalTaskHours(task.task) }}({{ showTaskDeciminalNumber(task.task) }})</td>
-                          <td>{{ task.task.point }}pt</td>
+                        <tr class="row">
+                          <td class="col">{{ totalTaskHours(task.task) }}({{ showTaskDeciminalNumber(task.task) }})</td>
+                          <td class="col text-right">{{ task.task.point }}pt</td>
                         </tr>
                       </tbody>
                     </table>
