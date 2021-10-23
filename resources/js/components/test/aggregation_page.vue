@@ -40,37 +40,17 @@
                 </div>
               </div>
               <div class="card-body pt-0">
-                <div class="text-left mb-5">
-                  <div>合計作業ポイント：{{ totalPoint(item) }}pt</div>
-                  <div>合計作業時間：{{ totalCategoryHours(item)}}({{ showcategoryDeciminalNumber(item) }}h)</div>
-                  <div>1ptにかかる作業時間：{{ manhourFor1pt(item) }}h</div>
+                <div class="text-left mb-4">
+                  <div>作業ポイント：{{ totalPoint(item) }}pt</div>
+                  <div>作業時間：{{ totalCategoryHours(item)}}({{ showcategoryDeciminalNumber(item) }}h)</div>
+                  <div>1ptあたり：{{ manhourFor1pt(item) }}h</div>
                   <div class="boreder-line" />
                 </div>
-                <!-- <table class="table table-bordered mt-2 mb-3">
-                  <tr>
-                    <td>作業ポイント</td>
-                    <td>{{ totalPoint(item) }}pt</td>
-                  </tr>
-                  <tr>
-                    <td>作業時間</td>
-                    <td>{{ totalCategoryHours(item)}}({{ showcategoryDeciminalNumber(item) }}h)</td>
-                  </tr>
-                  <tr>
-                    <td>1ptにあたり</td>
-                    <td>{{ manhourFor1pt(item) }}h</td>
-                  </tr>
-                </table>
-                <div class="boreder-line mb-4" /> -->
                 <div 
                   v-for="(task, taskIndex) in item.tasks"
                   class="mb-3"
                 >
                   <div class="pl-1">
-                    <!-- <div>{{task.task.name}}</div>
-                    <div class="row">
-                      <div class="total-task-hour col">{{ totalTaskHours(task.task) }}({{ showTaskDeciminalNumber(task.task) }})</div>
-                      <div class="col">{{ task.task.point }}pt</div>
-                    </div> -->
                     <table class="table">
                       <thead >
                         {{task.task.name}}
