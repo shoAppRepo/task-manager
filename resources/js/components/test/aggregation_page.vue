@@ -121,7 +121,7 @@ export default {
     workDays() {
       const period = this.periods.find((period) => period.period_id === this.selectedPeriod);
       if(period){
-        return period.work_days;
+        return (Number.isInteger(period.work_days))?period.work_days:0;
       }
 
       return 0;
