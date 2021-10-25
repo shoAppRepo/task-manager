@@ -11,7 +11,7 @@ class TaskController extends Controller
   public function index()
   {
     $login_id = \Auth::id();
-    $tasks = Task::where('user_id', $login_id)->get();
+    $tasks = Task::where('user_id', $login_id)->orderby('task_id')->get();
 
     $PeriodController = new PeriodController();
     $periods = $PeriodController->index();
