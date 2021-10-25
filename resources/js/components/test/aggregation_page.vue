@@ -124,7 +124,7 @@ export default {
         return period.work_days;
       }
 
-      return null;
+      return 0;
     },
     periodName(){
       return(period) => {
