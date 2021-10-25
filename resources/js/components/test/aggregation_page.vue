@@ -17,6 +17,10 @@
         <table class="table table-bordered">
           <tbody>
             <tr>
+              <td>稼働日数</td>
+              <td>{{ workDays }}日</td>
+            </tr>
+            <tr>
               <td>合計作業時間</td>
               <td>{{allCategoryHours}}({{allDiciminalCategoryHour}}h)</td>
             </tr>
@@ -113,6 +117,14 @@ export default {
     selectedPeriod: {
       get () { return this.$store.state.period.selected_period },
       set (val) { this.$store.commit('period/setSelectedPeriod', val) },
+    },
+    workDays() {
+      const period = this.periods.find((period) => period.period_id === this.selectedPeriod);
+      if(period){
+        return period.work_days;
+      }
+
+      return null;
     },
     periodName(){
       return(period) => {

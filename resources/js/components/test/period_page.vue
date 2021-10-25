@@ -17,6 +17,9 @@
             <datetime type="date" v-model="period.end" />
           </div>
           <div>
+            <input type="number" v-model="period.work_days" />日
+          </div>
+          <div>
             <input type="number" v-model="period.goal_point" />pt
           </div>
           <button class="btn block p-0">
