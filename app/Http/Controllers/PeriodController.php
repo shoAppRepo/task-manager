@@ -11,12 +11,12 @@ class PeriodController extends Controller
   public function index()
   {
     $login_id = \Auth::id();
-    $periods = Period::where('user_id', $login_id)->get();
+    $periods = Period::where('user_id', $login_id)->orderby('period_id')->get();
 
     return compact('periods');
   }
 
-  public function indexWithItems($params)
+  public function indexWithItems(string ...$params)
   {
     list(
       'periods' => $periods,
@@ -29,7 +29,7 @@ class PeriodController extends Controller
       $CtgController = new CategoryController();
       list(
         'items' => $items,
-      )= $CtgController->index([$selected_period]);
+      )= $CtgController->index($selected_period);
     }
 
     return compact('periods', 'items');

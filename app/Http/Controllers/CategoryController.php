@@ -19,7 +19,7 @@ class CategoryController extends Controller
     return compact('manhours');
   }
   
-  public function index($params)
+  public function index(string ...$params)
   {
     $login_id = \Auth::id();
     $period_id = $params[0];
