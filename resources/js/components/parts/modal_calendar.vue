@@ -92,7 +92,7 @@ export default {
     },
     selectedTask: {
       get () { return this.item.task_id },
-      set (val) { this.changeValue(val) },
+      set (val) { this.changeValue('task_id', val) },
     },
   },
   methods:{

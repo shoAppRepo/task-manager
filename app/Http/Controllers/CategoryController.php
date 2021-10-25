@@ -135,6 +135,6 @@ class CategoryController extends Controller
       }
     }
 
-    return $this->index([$period_id]);
+    return $this->index($period_id);
   }
 }
