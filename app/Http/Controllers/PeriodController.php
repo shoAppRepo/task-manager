@@ -11,7 +11,7 @@ class PeriodController extends Controller
   public function index()
   {
     $login_id = \Auth::id();
-    $periods = Period::where('user_id', $login_id)->orderby('period_id')->get();
+    $periods = Period::where('user_id', $login_id)->orderby('start', 'desc')->orderby('end', 'desc')->get();
 
     return compact('periods');
   }
