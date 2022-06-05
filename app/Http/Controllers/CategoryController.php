@@ -39,7 +39,7 @@ class CategoryController extends Controller
       $item = [];
       
       // 紐づくtaskを取得し、インデックスを採番
-      $tasks_of_this_category = $tasks->where('category_id', $category->category_id)->values();
+      $tasks_of_this_category = $tasks->where('category_id', $category->category_id)->sortby('sort')->values();
       $tasks_with_manhours = [];
 
       // taskに紐づくmanhourを取得し、インデックスを採番
