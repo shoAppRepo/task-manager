@@ -92,7 +92,7 @@ export default {
         end: null,
       };
 
-      this.periods.push(new_period);
+      this.periods.unshift(new_period);
     },
   },
 };
